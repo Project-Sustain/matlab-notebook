@@ -28,4 +28,7 @@ dependencies {
 }
 ```
 
-6. Executing MATLAB from Java: https://www.mathworks.com/help/matlab/matlab_external/execute-matlab-functions-from-java.html
+Helpful documentation:
+- [Executing MATLAB from Java](https://www.mathworks.com/help/matlab/matlab_external/execute-matlab-functions-from-java.html)
+- [Executing a user-defined MATLAB script from Java](https://www.mathworks.com/matlabcentral/answers/355278-calling-user-defined-script-from-java)
+- [Writing a MATLAB matrix to CSV file](https://www.mathworks.com/matlabcentral/answers/281156-how-can-i-export-a-matrix-as-a-csv-file)

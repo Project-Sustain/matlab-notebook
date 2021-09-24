@@ -5,19 +5,15 @@ import java.util.concurrent.ExecutionException;
 
 public class Main {
 
-
     public static void main(String[] programArgs) {
         System.out.println("Hello world!");
         try {
-            MatlabEngine eng = MatlabEngine.startMatlab();
+            MatlabEngine matlabEngine = MatlabEngine.startMatlab();
 
-            double[] a = {2.0 ,4.0, 6.0};
-            double[] roots = eng.feval("sqrt", a);
-            for (double e: roots) {
-                System.out.println(e);
-            }
+            matlabEngine.eval("cd matlab_testing/");
+            matlabEngine.eval("test()");
+            matlabEngine.close();
 
-            eng.close();
         } catch(EngineException e) {
             e.printStackTrace();
         } catch(InterruptedException e) {
