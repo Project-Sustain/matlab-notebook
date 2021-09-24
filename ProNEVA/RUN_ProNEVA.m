@@ -40,7 +40,7 @@ save('currentDIR.mat', 'currentDIR')    % Save Original Directory
 
 %% (1) EDIT - LOAD DATA
 %fileOBS = fopen('C:\Users\Elisa Ragno\Desktop\data\FersonQmax1980_2010.txt'); %You can use full path 
-fileOBS = fopen('../US_Temp.txt');
+fileOBS = fopen('../precipitable_water.txt');
 % DO NOT EDIT 
 textOBS  = textscan(fileOBS, '%f');
 fclose(fileOBS);
