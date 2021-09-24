@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+
+    id 'idea'
+}
+
+group 'org.sustain'
+version '1.0-SNAPSHOT'
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+// Where to find source files for compilation
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+// Dependency specifications
+dependencies {
+
+    // For logging
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha5'
+    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'
+
+    // Use JUnit test framework
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+}
+
+// Testing specification
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
+// Build an Uber Jar containing not only the compiled class files but all dependency jars
+jar {
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    archiveClassifier = 'uber'
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
