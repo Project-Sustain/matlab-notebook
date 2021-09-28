@@ -1,61 +1,63 @@
 plugins {
-    id 'java'
-
-    id 'idea'
+	id 'org.springframework.boot' version '2.6.0-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'idea'
 }
 
-group 'org.sustain'
-version '1.0-SNAPSHOT'
+group = 'org.sustain'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
 
 repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// For MATLAB
+	implementation files('/Applications/MATLAB_R2021a.app/java/jar/engine.jar')
+	implementation files('/Applications/MATLAB_R2021a.app/java/jar/javaenginecore.jar')
+	implementation files('/Applications/MATLAB_R2021a.app/java/jar/matlab.jar')
+
+	// For logging
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha5'
+	implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'
+
+	// Use JUnit test framework
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
 }
 
 // Where to find source files for compilation
 sourceSets {
-    main {
-        java {
-            srcDirs = ['src']
-        }
-    }
+	main {
+		java {
+			srcDirs = ['src/main/java']
+		}
+	}
 }
 
-// Dependency specifications
-dependencies {
-
-    // For MATLAB
-    implementation files('/Applications/MATLAB_R2021a.app/java/jar/engine.jar')
-    implementation files('/Applications/MATLAB_R2021a.app/java/jar/javaenginecore.jar')
-    implementation files('/Applications/MATLAB_R2021a.app/java/jar/matlab.jar')
-
-    // For logging
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha5'
-    implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'
-
-    // Use JUnit test framework
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
-}
-
-// Testing specification
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 
-    testLogging {
-        showStandardStreams = true
-    }
+	testLogging {
+		showStandardStreams = true
+	}
 }
 
-// Build an Uber Jar containing not only the compiled class files but all dependency jars
 jar {
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
-    archiveClassifier = 'uber'
+	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+	archiveClassifier = 'uber'
 
-    from sourceSets.main.output
+	from sourceSets.main.output
 
-    dependsOn configurations.runtimeClasspath
-    from {
-        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
-    }
+	dependsOn configurations.runtimeClasspath
+	from {
+		configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+	}
 }
