@@ -89,11 +89,7 @@ public class Query {
                                 new BucketOptions()
                                         .defaultBucket(2010030100)
                                         .output(
-                                                new BsonField("max_precip_kg_sq_meter",
-                                                        new Document("$max", Accumulators.max("_max",
-                                                                "$precipitable_water_kg_per_squared_meter")
-                                                        )
-                                                )
+                                                Accumulators.max("max_precip_kg_sq_meter", "$precipitable_water_kg_per_squared_meter")
                                         )
                         )
 
