@@ -6,7 +6,9 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
 
+import com.mongodb.client.model.*;
 import org.bson.BsonDocument;
 import org.bson.BsonInt64;
 import org.bson.Document;
@@ -51,36 +53,18 @@ public class Query {
     public static void query() {
 
         String uri = "mongodb://lattice-100:27018";
-        try (MongoClient mongoClient = MongoClients.create(
+        MongoClient mongoClient = MongoClients.create(
                 MongoClientSettings.builder()
                         .applyToClusterSettings(builder ->
                                 builder.hosts(Arrays.asList(new ServerAddress("lattice-100", 27018))))
                         .build()
-        )) {
-            MongoDatabase database = mongoClient.getDatabase("admin");
-            try {
-                Bson command = new BsonDocument("ping", new BsonInt64(1));
-                Document commandResult = database.runCommand(command);
-                System.out.println("Connected successfully to server.");
-            } catch (MongoException me) {
-                System.err.println("An error occurred while attempting to run a command: " + me);
-            }
-        }
+        );
 
-        /*
+
         System.err.println("Executing MongoDB Query...");
 
-        MongoClient mongoClient =  MongoClients.create("mongodb://lattice-100:27018");
         MongoDatabase database = mongoClient.getDatabase("sustaindb");
         MongoCollection<Document> collection = database.getCollection("noaa_nam");
-
-
-        Block<Document> printBlock = new Block<Document>() {
-                @Override
-                public void apply(final Document document) {
-                    System.out.println(document.toJson());
-                }
-            };
 
 
         collection.aggregate(
@@ -119,8 +103,6 @@ public class Query {
         );
 
         mongoClient.close();
-
-         */
     }
 
     public static void main(String[] args) {
