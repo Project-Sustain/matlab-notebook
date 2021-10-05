@@ -62,12 +62,7 @@ public class Query {
         MongoDatabase database = mongoClient.getDatabase("sustaindb");
         MongoCollection<Document> collection = database.getCollection("noaa_nam");
 
-        Block<Document> printBlock = new Block<Document>() {
-            @Override
-            public void apply(final Document document) {
-                System.out.println(document.toJson());
-            }
-        };
+        Block<Document> printBlock = document -> System.out.println(document.toJson());
 
         collection.aggregate(
                 Arrays.asList(
