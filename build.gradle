@@ -18,17 +18,18 @@ repositories {
 dependencies {
 
 	// For MongoDB
-	implementation group: 'org.mongodb', name: 'mongodb-driver', version: '3.4.3'
+	implementation group: 'com.mongodb', name: 'mongo-java-driver', version: '2.7.1'
 
 	// For Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
 
-	// For MATLAB
+	// For MATLAB on Mac
 	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/engine.jar')
 	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/javaenginecore.jar')
 	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/matlab.jar')
 
+	// For MATLAB on CentOS (CSU lab machines)
 	implementation files('/s/parsons/l/sys/matlab/java/jar/engine.jar')
 	implementation files('/s/parsons/l/sys/matlab/java/jar/javaenginecore.jar')
 	implementation files('/s/parsons/l/sys/matlab/java/jar/matlab.jar')
