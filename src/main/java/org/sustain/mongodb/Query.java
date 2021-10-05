@@ -92,7 +92,9 @@ public class Query {
                         )
 
                 )
-        ).forEach(printBlock);
+        ).forEach(
+                x -> System.out.println(x.toJson())
+        );
 
         mongoClient.close();
     }
