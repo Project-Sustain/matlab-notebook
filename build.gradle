@@ -60,8 +60,10 @@ test {
 }
 
 jar {
-	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA','META-INF/LICENSE.txt','META-INF/NOTICE.txt'
+	duplicatesStrategy = DuplicatesStrategy.INCLUDE
+	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA','META-INF/LICENSE.txt','META-INF/NOTICE.txt',
 	archiveClassifier = 'uber'
+
 
 	from sourceSets.main.output
 
