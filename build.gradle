@@ -58,3 +58,15 @@ test {
 		showStandardStreams = true
 	}
 }
+
+jar {
+	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA','META-INF/LICENSE.txt','META-INF/NOTICE.txt'
+	archiveClassifier = 'uber'
+
+	from sourceSets.main.output
+
+	dependsOn configurations.runtimeClasspath
+	from {
+		configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+	}
+}
