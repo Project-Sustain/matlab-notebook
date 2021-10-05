@@ -37,6 +37,12 @@ switch RUNspec.DISTR.Model
         ListFigure = findobj('type', 'Figure');
         savefig(ListFigure, 'Figures.fig');
         
+        % ---SUSTAIN addition--- Save RLplot matrices
+        writematrix(OUT.RLplot.RL95, "RL95.csv");
+        writematrix(OUT.RLplot.RL05, "RL05.csv");
+        writematrix(OUT.RLplot.RL50, "RL50.csv");
+        writematrix(OUT.RLplot.RLm, "RLm.csv");
+        
     case 'NonStat'
         % Create a NonStationaryAnalysis folder if it does not exist
         if exist('NonStationaryAnalysis','file') == 0
@@ -53,6 +59,13 @@ switch RUNspec.DISTR.Model
         % Save Figures
         ListFigure = findobj('type', 'Figure');
         savefig(ListFigure, 'Figures.fig');
+        
+        % ---SUSTAIN addition--- Save RLplot matrices
+        writematrix(OUT.RLplot.RL95, "RL95.csv");
+        writematrix(OUT.RLplot.RL05, "RL05.csv");
+        writematrix(OUT.RLplot.RL50, "RL50.csv");
+        writematrix(OUT.RLplot.RLm, "RLm.csv");
+        
 
 end
 % BACK TO ORIGINAL DIRECTORY

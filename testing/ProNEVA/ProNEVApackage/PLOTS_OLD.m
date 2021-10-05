@@ -486,52 +486,19 @@ end
 %--------------------------------------------------------------------------
 switch RUNspec.DISTR.Type
     case 'GP'
-        % CDF based on Weibull formula
-        x  = sort(RUNspec.OBS);
-        
-        for ix = 1:length(x)
-            fx(ix) = sum( x <= x(ix) )/( length(x) + 1 );
-        end
-        
-        Tx = ( 1./( 1 - fx ) )./ ( RUNspec.NobsY );
-                
-%         % Alternative way: built-in ECDF function (uncomment also lines 533-534) 
-%         [fx, x] = ecdf(RUNspec.OBS);                                 % ECDF entire data
-%         Tx = ( 1./( 1 - fx ( 1 : end-1 ) ) )./ ( RUNspec.NobsY );    % Removed fx = 1;
+        [fx, x] = ecdf(RUNspec.OBS);        % ECDF entire data
+        Tx = ( 1./( 1 - fx ( 1 : end-1 ) ) )./ ( RUNspec.NobsY );    % Removed fx = 1;
         
     case 'GEV'
-        
-        % CDF based on Weibull formula
-        x  = sort(OBS);
-        
-        for ix = 1:length(x)
-            fx(ix) = sum( x <= x(ix) )/( length(x) + 1 );
-        end
-        
-        Tx = ( 1./( 1 - fx ) );
-        
-        
-%         % Alternative way: built-in ECDF function (uncomment also lines 533-534)
-%         [fx, x] = ecdf(OBS);
-%         Tx = 1./(1-fx(1:end-1));    % Removed fx = 1;
+        [fx, x] = ecdf(OBS);
+        Tx = 1./(1-fx(1:end-1));    % Removed fx = 1;
         
     case 'P3'
-        % CDF based on Weibull formula
-        x  = sort( exp(OBS) );
-        
-        for ix = 1:length(x)
-            fx(ix) = sum( x <= x(ix) )/( length(x) + 1 );
-        end
-        
-        Tx = ( 1./( 1 - fx ) );
-        
-%         %Alternative way: built-in ECDF function (uncomment also lines 533-534)
-%         [fx, x] = ecdf(exp(OBS));
-%         Tx = 1./(1-fx(1:end-1));    % Removed fx = 1;
+        [fx, x] = ecdf(exp(OBS));
+        Tx = 1./(1-fx(1:end-1));    % Removed fx = 1;
 end
 
-% % Uncomment in case built-in ECDF is choosen
-% x  = x( 1 :end-1 );
+x  = x( 1 :end-1 );
  
 %--------------------------------------------------------------------------
 %                           PLOT RETURN LEVEL                             %
@@ -586,13 +553,11 @@ for f = 1 : nVC
     hYLabel = ylabel( 'Return Level' );
     
     if f == 1
+
         % Empirical CDF
         try
             hObs = scatter( log10(Tx), x, 25, 'MarkerEdgeColor',[0 0 .8],'MarkerEdgeAlpha', .4,...
                       'MarkerFaceColor',[0 0 1], 'MarkerFaceAlpha', .4, 'LineWidth',1);
-            
-            % ---SUSTAIN addition--- Save hObs
-            writematrix(hObs, "hObs.csv")
         catch
             hObs = scatter( log10(Tx), x, 25, 'MarkerEdgeColor',[0 0 .8],...
                 'MarkerFaceColor',[0 0 1],'LineWidth',1);
@@ -625,21 +590,11 @@ for f = 1 : nVC
         'XColor', [.3 .3 .3], 'YColor', [.3 .3 .3], 'LineWidth', 1, ...
          'Xtick',  ( log10( [2 10 20 50 100 ])), 'Xticklabel', {'2' '10' '20' '50' '100'} );
      
-    xlim([log10(TT(1)) log10( TT(end) ) ]);
-    
-    
-    % ---SUSTAIN addition--- Save TT, Tx, and fx
-    writematrix(TT, "TT.csv")
-    writematrix(Tx, "Tx.csv")
-    writematrix(fx, "fx.csv")
-    writematrix(log10(TT), "log10TT.csv")
-    
+     xlim([log10(TT(1)) log10( TT(end) ) ]);
+     
 %    xticks( log10( [2 10 20 50 100 ]) );
 %    xticklabels( {'2' '10' '20' '50' '100'} );
 end
-
-
-OUT
 
 end
 

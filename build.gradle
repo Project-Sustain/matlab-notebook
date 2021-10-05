@@ -16,8 +16,13 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// For MongoDB
+	implementation group: 'org.mongodb', name: 'mongodb-driver', version: '3.4.3'
+
+	// For Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
 
 	// For MATLAB
 	implementation files('/Applications/MATLAB_R2021a.app/java/jar/engine.jar')
@@ -29,8 +34,8 @@ dependencies {
 	implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha5'
 
 	// Use JUnit test framework
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
 }
 
 // Where to find source files for compilation
@@ -47,17 +52,5 @@ test {
 
 	testLogging {
 		showStandardStreams = true
-	}
-}
-
-jar {
-	exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
-	archiveClassifier = 'uber'
-
-	from sourceSets.main.output
-
-	dependsOn configurations.runtimeClasspath
-	from {
-		configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
 	}
 }
