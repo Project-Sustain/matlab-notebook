@@ -1,6 +1,8 @@
 package org.sustain.mongodb;
 
+import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoException;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
@@ -9,6 +11,8 @@ import org.bson.BsonDocument;
 import org.bson.BsonInt64;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+
+import java.util.Arrays;
 
 public class Query {
 
@@ -47,7 +51,12 @@ public class Query {
     public static void query() {
 
         String uri = "mongodb://lattice-100:27018";
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
+        try (MongoClient mongoClient = MongoClients.create(
+                MongoClientSettings.builder()
+                        .applyToClusterSettings(builder ->
+                                builder.hosts(Arrays.asList(new ServerAddress("lattice-100", 27018))))
+                        .build()
+        )) {
             MongoDatabase database = mongoClient.getDatabase("admin");
             try {
                 Bson command = new BsonDocument("ping", new BsonInt64(1));
