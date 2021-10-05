@@ -26,9 +26,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.5'
 
 	// For MATLAB on Mac
-	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/engine.jar')
-	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/javaenginecore.jar')
-	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/matlab.jar')
+	implementation files('/Applications/MATLAB_R2021a.app/java/jar/engine.jar')
+	implementation files('/Applications/MATLAB_R2021a.app/java/jar/javaenginecore.jar')
+	implementation files('/Applications/MATLAB_R2021a.app/java/jar/matlab.jar')
 
 	// For MATLAB on CentOS (CSU lab machines)
 	//implementation files('/s/parsons/l/sys/matlab/java/jar/engine.jar')
