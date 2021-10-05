@@ -1,8 +1,7 @@
 package org.sustain.mongodb;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.*;
@@ -49,12 +48,18 @@ public class Query {
 
         System.err.println("Executing MongoDB Query...");
 
-        MongoClientURI connectionString = new MongoClientURI("mongodb://localhost:27018");
-        MongoClient mongoClient = new MongoClient(connectionString);
+        MongoClient mongoClient =  MongoClients.create("mongodb://lattice-100:27018");
         MongoDatabase database = mongoClient.getDatabase("sustaindb");
         MongoCollection<Document> collection = database.getCollection("noaa_nam");
 
-        Block<Document> printBlock = document -> System.out.println(document.toJson());
+
+        Block<Document> printBlock = new Block<Document>() {
+                @Override
+                public void apply(final Document document) {
+                    System.out.println(document.toJson());
+                }
+            };
+
 
         collection.aggregate(
                 Arrays.asList(

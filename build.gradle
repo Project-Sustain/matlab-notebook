@@ -18,7 +18,8 @@ repositories {
 dependencies {
 
 	// For MongoDB
-	implementation group: 'com.mongodb', name: 'mongo-java-driver', version: '2.7.1'
+	//implementation group: 'com.mongodb', name: 'mongo-java-driver', version: '2.7.1'
+  implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.0.5'
 
 	// For Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
