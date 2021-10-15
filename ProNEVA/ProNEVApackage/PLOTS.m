@@ -592,7 +592,10 @@ for f = 1 : nVC
                       'MarkerFaceColor',[0 0 1], 'MarkerFaceAlpha', .4, 'LineWidth',1);
             
             % ---SUSTAIN addition--- Save hObs
-            writematrix(hObs, "hObs.csv")
+            % writematrix(hObs, "hObs.csv") % Write to csv file
+            OUT.obsX = log10(Tx);
+            OUT.obsY = x;
+            
         catch
             hObs = scatter( log10(Tx), x, 25, 'MarkerEdgeColor',[0 0 .8],...
                 'MarkerFaceColor',[0 0 1],'LineWidth',1);
@@ -629,10 +632,14 @@ for f = 1 : nVC
     
     
     % ---SUSTAIN addition--- Save TT, Tx, and fx
-    writematrix(TT, "TT.csv")
-    writematrix(Tx, "Tx.csv")
-    writematrix(fx, "fx.csv")
-    writematrix(log10(TT), "log10TT.csv")
+    % writematrix(TT, "TT.csv")
+    % writematrix(Tx, "Tx.csv")
+    % writematrix(fx, "fx.csv")
+    % writematrix(log10(TT), "log10TT.csv")
+    OUT.TT = TT;
+    OUT.Tx = Tx;
+    OUT.fx = fx;
+    OUT.log10TT = log10(TT);
     
 %    xticks( log10( [2 10 20 50 100 ]) );
 %    xticklabels( {'2' '10' '20' '50' '100'} );

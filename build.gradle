@@ -31,9 +31,9 @@ dependencies {
 	//implementation files('/Applications/MATLAB_R2021a.app/java/jar/matlab.jar')
 
 	// For MATLAB on CentOS (CSU lab machines)
-	implementation files('/s/parsons/l/sys/matlab/java/jar/engine.jar')
-	implementation files('/s/parsons/l/sys/matlab/java/jar/javaenginecore.jar')
-	implementation files('/s/parsons/l/sys/matlab/java/jar/matlab.jar')
+	implementation files('/usr/local/matlab/latest/java/jar/engine.jar')
+	implementation files('/usr/local/matlab/latest/java/jar/javaenginecore.jar')
+	implementation files('/usr/local/matlab/latest/java/jar/matlab.jar')
 
 	// For logging
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.0-alpha5'

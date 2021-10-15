@@ -29,36 +29,21 @@
 %change without notice.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function []=runProNEVA(inputFilename)
-
-% Erease previous messages
+function [obsX, obsY, log10TT, RL50, RL05, RL95, RLM]=runProNEVA(input)
 clc;
-
-% DO NOT EDIT
-currentDIR = pwd();                     % Current Directory     
-cd('ProNEVApackage');                   % Open Folder w/ ProNEVA Source codes
-save('currentDIR.mat', 'currentDIR')    % Save Original Directory 
-
-%% (1) EDIT - LOAD DATA
-disp("Using input file: " + inputFilename)
-fileOBS = fopen("../" + inputFilename);
-% DO NOT EDIT 
-textOBS  = textscan(fileOBS, '%f');
-fclose(fileOBS);
-OBS = textOBS{1}(:);
+OBS = input(:);
 
 %% (2) EDIT - DISTRIBUTION TYPE
 % RUNspec.DISTR.Type
 % (i)   RUNspec.DISTR.Type = 'GEV'     Generalized Extreme Value Distribution
 % (ii)  RUNspec.DISTR.Type = 'GP'      Generalized Pareto Distribution
 % (iii) RUNspec.DISTR.Type = 'P3'      Pearson Typer III
-
 RUNspec.DISTR.Type = 'GEV';
+
 
 %% (3) EDIT - MODEL TYPE
 % 'Stat'    : Stationary Analysis
 % 'NonStat' : Nonstationary Analysis
-
 RUNspec.DISTR.Model = 'NonStat';
 
 if strcmp(RUNspec.DISTR.Model, 'NonStat')
@@ -72,7 +57,7 @@ if strcmp(RUNspec.DISTR.Model, 'NonStat')
     if strcmp(RUNspec.COV.Type, 'User')
         
         %% EDIT - SELECT FILE COVARIATE
-        fileCOV = fopen('C:\Users\Elisa Ragno\Desktop\data\US_CO2_covariate_for_US_Temp.txt');
+        fileCOV = fopen('covariate');
         % DO NOT EDIT 
         textCOV  = textscan(fileCOV, '%f');
         fclose(fileCOV);
@@ -234,9 +219,9 @@ RUNspec.RP      = 100;
 % Extra Options 
 % 'Y': Yes - 'N': No
 % Save Results? 'Y' /'N'
-EXTRAS.saveRES  = 'Y';
+EXTRAS.saveRES  = 'N';
 % Run Mann-Kendall and White Tests? 'Y'/'N'
-EXTRAS.RunTests = 'Y';
+EXTRAS.RunTests = 'N';
 % Plot Return Level? 'Y'/'N'
 EXTRAS.PlotRL   = 'Y';
 
@@ -244,8 +229,18 @@ EXTRAS.PlotRL   = 'Y';
 save('USER_INPUT.mat', 'OBS','RUNspec', 'EXTRAS');
 
 %% (6) RUN ProNEVA
-ProNEVA(OBS, RUNspec, EXTRAS)           
+cd('ProNEVApackage');
+[ OUT ] = ProNEVA(OBS, RUNspec, EXTRAS);       
 
-exit;
+log10TT = OUT.log10TT;
+RL50 = OUT.RLplot.RL50( : , 1);
+RL05 = OUT.RLplot.RL05( : , 1);
+RL95 = OUT.RLplot.RL95( : , 1);
+RLM = OUT.RLplot.RLm( : , 1);
+obsX = OUT.obsX;
+obsY = OUT.obsY;
+
+
+% exit;
 end
 

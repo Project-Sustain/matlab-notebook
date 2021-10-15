@@ -2,14 +2,8 @@ package org.sustain.matlab;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.sustain.matlab.eva.EvaController;
-
-import java.util.Arrays;
 
 @SpringBootApplication
 public class MatlabApplication {
@@ -20,6 +14,7 @@ public class MatlabApplication {
 		SpringApplication.run(MatlabApplication.class, args);
 	}
 
+	/*
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
@@ -33,6 +28,6 @@ public class MatlabApplication {
 			}
 
 		};
-	}
+	}*/
 
 }

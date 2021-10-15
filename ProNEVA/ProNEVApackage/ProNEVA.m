@@ -1,4 +1,4 @@
-function ProNEVA(OBS, RUNspec, EXTRAS)
+function [ OUT ] = ProNEVA(OBS, RUNspec, EXTRAS)
 
 % Total Number of Observations
 RUNspec.Nobs = length(OBS); 
