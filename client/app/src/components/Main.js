@@ -3,6 +3,7 @@ import {Button, Grid, makeStyles, Paper} from "@material-ui/core";
 import CustomAutocomplete from "./CustomAutocomplete";
 import {stateArray} from "../utils/StateCountyMapping";
 import CustomRadios from "./CustomRadios";
+import {countyGIS} from "../utils/gis_county";
 
 const useStyles = makeStyles({
     root: {
@@ -50,7 +51,20 @@ export default function Main() {
         </Grid>
     )
 
+    function findGISJoin() {
+        const searchString = `${selectedCounty} County, ${selectedState}`;
+        let found = "";
+        countyGIS.forEach((county) => {
+            if(county.name === searchString) {
+                found = county.GISJOIN;
+            }
+        });
+        return found;
+    }
+
     function handleSubmit() {
+        const GISJOIN = findGISJoin();
+        console.log({GISJOIN})
         console.log({selectedState})
         console.log({selectedCounty})
         console.log({timePeriod})
