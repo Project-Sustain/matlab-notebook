@@ -19,7 +19,7 @@ export default function Response(props) {
         const bracketRight = "}"
         return (
             <Grid item>
-                <Paper className={classes.root}>
+                <Paper elevation={3} className={classes.root}>
                     <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
                         <Typography>{bracketLeft}</Typography>
                         <Typography>

@@ -32,7 +32,7 @@ export default function Main() {
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
-            <Paper className={classes.root}>
+            <Paper elevation={3} className={classes.root}>
                 <Grid container direction="column" justifyContent="center" alignItems="center">
                     <CustomAutocomplete
                         label="Choose a State"
