@@ -23,30 +23,20 @@ const useStyles = makeStyles({
 
 export default function Main() {
     const classes = useStyles();
+    const timePeriods = ["year", "month", "day", "hour"];
+    const timeSteps = ["0", "3", "6"];
+    const field = "total_precipitation_kg_per_squared_meter"
+
     const [selectedState, setSelectedState] = useState("");
     const [counties, setCounties] = useState([]);
     const [selectedCounty, setSelectedCounty] = useState("");
-
-    // useEffect(() => {
-    //     setCounties(countyMap[`${selectedState}`]);
-    //     setSelectedCounty(countyMap[`${selectedState}`][0]);
-    // }, [selectedState])
-
-    const timePeriods = ["year", "month", "day", "hour"];
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
-
-    const timeSteps = ["0", "3", "6"];
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
-
-    const [collection, setCollection] = useState("noaa-nam"); //FIXME Remove hard-coding once dataset are incorporated
-
-    const dataManagement = {setSelectedState, setCounties, setSelectedCounty, setCollection}
-
+    const [collection, setCollection] = useState("noaa-nam");
     const [gisJoin, setGisJoin] = useState("");
     const [response, setResponse] = useState(false);
 
-    const field = "total_precipitation_kg_per_squared_meter"
-
+    const dataManagement = {setSelectedState, setCounties, setSelectedCounty, setCollection}
     const data = {gisJoin, field, collection, timePeriod, timeStep, response, setResponse}
 
     return (
