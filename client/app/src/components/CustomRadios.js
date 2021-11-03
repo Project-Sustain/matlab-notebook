@@ -1,14 +1,24 @@
 import * as React from 'react';
-import {FormControl, FormControlLabel, FormLabel, Radio, RadioGroup} from "@material-ui/core";
+import {FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography} from "@material-ui/core";
 
 export default function CustomRadios(props) {
     return (
-        <FormControl component="fieldset" className={props.class}>
-            <FormLabel component="legend">{props.label}</FormLabel>
-            <RadioGroup row>
-                {getRadios()}
-            </RadioGroup>
-        </FormControl>
+        <>
+            <Grid container direction="row" justifyContent="center" alignItems="center">
+                <Grid item>
+                    <Typography component="legend" style={{color: "#818181"}}>
+                        {props.label}:
+                    </Typography>
+                </Grid>
+                <Grid item>
+                    <FormControl component="fieldset" className={props.class}>
+                        <RadioGroup row>
+                            {getRadios()}
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+            </Grid>
+        </>
     );
 
     function getRadios() {

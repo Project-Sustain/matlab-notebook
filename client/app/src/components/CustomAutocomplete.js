@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {makeStyles, TextField} from "@material-ui/core";
+import {TextField} from "@material-ui/core";
 import { Autocomplete } from '@material-ui/lab';
 import {countyMap} from "../utils/StateCountyMapping";
 
