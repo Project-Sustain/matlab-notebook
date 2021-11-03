@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Grid, makeStyles, Paper} from "@material-ui/core";
 import CustomAutocomplete from "./CustomAutocomplete";
-import {stateArray} from "../utils/StateCountyMapping";
+import {countyMap, stateArray} from "../utils/StateCountyMapping";
 import CustomRadios from "./CustomRadios";
 import {countyGIS} from "../utils/gis_county";
 import Response from "./Response";
@@ -25,7 +25,12 @@ export default function Main() {
     const classes = useStyles();
     const [selectedState, setSelectedState] = useState("");
     const [counties, setCounties] = useState([]);
-    const [selectedCounty, setSelectedCounty] = useState([]);
+    const [selectedCounty, setSelectedCounty] = useState("");
+
+    // useEffect(() => {
+    //     setCounties(countyMap[`${selectedState}`]);
+    //     setSelectedCounty(countyMap[`${selectedState}`][0]);
+    // }, [selectedState])
 
     const timePeriods = ["year", "month", "day", "hour"];
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);

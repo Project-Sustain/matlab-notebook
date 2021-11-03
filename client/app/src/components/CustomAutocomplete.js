@@ -9,6 +9,7 @@ export default function CustomAutocomplete(props) {
         if(props.type === "state") {
             props.dataManagement.setSelectedState(value);
             props.dataManagement.setCounties(countyMap[`${value}`]);
+            props.dataManagement.setSelectedCounty(countyMap[`${value}`][0]);
         }
         else if(props.type === "county") {
             props.dataManagement.setSelectedCounty(value);

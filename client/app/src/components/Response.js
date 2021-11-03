@@ -31,16 +31,16 @@ export default function Response(props) {
                     <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
                         <Typography>{bracketLeft}</Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"collection": {props.data.collection},
+                            &emsp;&emsp;&emsp;&emsp;"collection": "{props.data.collection}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"field": {props.data.field},
+                            &emsp;&emsp;&emsp;&emsp;"field": "{props.data.field}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"gisJoin": {props.data.gisJoin},
+                            &emsp;&emsp;&emsp;&emsp;"gisJoin": "{props.data.gisJoin}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"perdiod": {props.data.timePeriod},
+                            &emsp;&emsp;&emsp;&emsp;"perdiod": "{props.data.timePeriod}",
                         </Typography>
                         <Typography>
                             &emsp;&emsp;&emsp;&emsp;"timestep": {parseInt(props.data.timeStep)}
@@ -55,8 +55,4 @@ export default function Response(props) {
     }
 
     else return null;
-}
-
-function text(props) {
-    return <Typography>{props.children}</Typography>
 }
