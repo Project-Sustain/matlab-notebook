@@ -7,6 +7,9 @@ const useStyles = makeStyles({
         margin: "20px",
         padding: "20px",
     },
+    button: {
+        marginTop: "10px"
+    }
 });
 
 export default function Response(props) {
@@ -20,14 +23,40 @@ export default function Response(props) {
             timestep: parseInt(props.data.timeStep)
         }
 
+        const bracketLeft = "{"
+        const bracketRight = "}"
         return (
             <Grid item>
                 <Paper className={classes.root}>
-                    <Typography>{JSON.stringify(returnObj)}</Typography>
+                    <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
+                        <Typography>{bracketLeft}</Typography>
+                        <Typography>
+                            &emsp;&emsp;&emsp;&emsp;"collection": {props.data.collection},
+                        </Typography>
+                        <Typography>
+                            &emsp;&emsp;&emsp;&emsp;"field": {props.data.field},
+                        </Typography>
+                        <Typography>
+                            &emsp;&emsp;&emsp;&emsp;"gisJoin": {props.data.gisJoin},
+                        </Typography>
+                        <Typography>
+                            &emsp;&emsp;&emsp;&emsp;"perdiod": {props.data.timePeriod},
+                        </Typography>
+                        <Typography>
+                            &emsp;&emsp;&emsp;&emsp;"timestep": {parseInt(props.data.timeStep)}
+                        </Typography>
+                        <Typography>{bracketRight}</Typography>
+                    </Grid>
+                    {/*<Typography>{JSON.stringify(returnObj)}</Typography>*/}
+                    <Button className={classes.button} variant="outlined" onClick={() => props.data.setResponse(false)}>Close</Button>
                 </Paper>
             </Grid>
         )
     }
 
     else return null;
+}
+
+function text(props) {
+    return <Typography>{props.children}</Typography>
 }

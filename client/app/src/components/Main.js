@@ -42,7 +42,7 @@ export default function Main() {
 
     const field = "total_precipitation_kg_per_squared_meter"
 
-    const data = {gisJoin, field, collection, timePeriod, timeStep, response}
+    const data = {gisJoin, field, collection, timePeriod, timeStep, response, setResponse}
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -62,23 +62,15 @@ export default function Main() {
 
     function findGISJoin() {
         const searchString = `${selectedCounty} County, ${selectedState}`;
-        // let found = "";
         countyGIS.forEach((county) => {
             if(county.name === searchString) {
                 setGisJoin(county.GISJOIN);
-                // found = county.GISJOIN;
             }
         });
-        // return found;
     }
 
     function handleSubmit() {
         setResponse(true)
         findGISJoin();
-        console.log({selectedState})
-        console.log({selectedCounty})
-        console.log({timePeriod})
-        console.log({timeStep})
-        console.log({collection})
     }
 }
