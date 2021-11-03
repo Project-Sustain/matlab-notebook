@@ -4,6 +4,7 @@ import CustomAutocomplete from "./CustomAutocomplete";
 import {stateArray} from "../utils/StateCountyMapping";
 import CustomRadios from "./CustomRadios";
 import {countyGIS} from "../utils/gis_county";
+import Response from "./Response";
 
 const useStyles = makeStyles({
     root: {
@@ -26,15 +27,22 @@ export default function Main() {
     const [counties, setCounties] = useState([]);
     const [selectedCounty, setSelectedCounty] = useState([]);
 
-    const timePeriods = ["Year", "Month", "Day", "Hour"];
+    const timePeriods = ["year", "month", "day", "hour"];
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
 
     const timeSteps = ["0", "3", "6"];
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
 
-    const [selectedDataset, setSelectedDataset] = useState("noaa-nam"); //FIXME Remove hard-coding once dataset are incorporated
+    const [collection, setCollection] = useState("noaa-nam"); //FIXME Remove hard-coding once dataset are incorporated
 
-    const dataManagement = {setSelectedState, setCounties, setSelectedCounty, setSelectedDataset}
+    const dataManagement = {setSelectedState, setCounties, setSelectedCounty, setCollection}
+
+    const [gisJoin, setGisJoin] = useState("");
+    const [response, setResponse] = useState(false);
+
+    const field = "total_precipitation_kg_per_squared_meter"
+
+    const data = {gisJoin, field, collection, timePeriod, timeStep, response}
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -48,27 +56,29 @@ export default function Main() {
                     <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
                 </Grid>
             </Paper>
+                <Response data={data} />
         </Grid>
     )
 
     function findGISJoin() {
         const searchString = `${selectedCounty} County, ${selectedState}`;
-        let found = "";
+        // let found = "";
         countyGIS.forEach((county) => {
             if(county.name === searchString) {
-                found = county.GISJOIN;
+                setGisJoin(county.GISJOIN);
+                // found = county.GISJOIN;
             }
         });
-        return found;
+        // return found;
     }
 
     function handleSubmit() {
-        const GISJOIN = findGISJoin();
-        console.log({GISJOIN})
+        setResponse(true)
+        findGISJoin();
         console.log({selectedState})
         console.log({selectedCounty})
         console.log({timePeriod})
         console.log({timeStep})
-        console.log({selectedDataset})
+        console.log({collection})
     }
 }
