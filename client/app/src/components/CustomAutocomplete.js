@@ -17,7 +17,7 @@ export default function CustomAutocomplete(props) {
         if(props.type === "state") {
             props.state.setSelectedState(value);
             props.state.setCounties(countyMap[`${value}`]);
-            // props.state.setSelectedCounty(countyMap[`${value}`][0]);
+            props.state.setSelectedCounty(countyMap[`${value}`][0]);
         }
         else if(props.type === "county") {
             props.state.setSelectedCounty(value);
@@ -27,12 +27,25 @@ export default function CustomAutocomplete(props) {
         }
     }
 
+    function getValue() {
+        if(props.type === "state") {
+            return props.state.selectedState;
+        }
+        else if(props.type === "county") {
+            return props.state.selectedCounty;
+        }
+        else if(props.type === "dataset") {
+            return props.state.collection;
+        }
+    }
+
     return (
         <Autocomplete
             className={classes.root}
             disabled={props.disabled}
             autoHighlight
             options={props.options}
+            value={getValue()}
             onChange={(event, value) => {
                 if (value) {
                     handleChange(value);

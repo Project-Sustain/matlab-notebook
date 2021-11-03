@@ -20,18 +20,15 @@ export default function Main() {
     const timeSteps = ["0", "3", "6"];
     const field = "total_precipitation_kg_per_squared_meter"; //FIXME hard-coded for now
 
-    const [selectedState, setSelectedState] = useState("");
+    const [selectedState, setSelectedState] = useState("Colorado");
     const [counties, setCounties] = useState([]);
-    const [selectedCounty, setSelectedCounty] = useState("");
+    const [selectedCounty, setSelectedCounty] = useState("Larimer");
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
     const [collection, setCollection] = useState("noaa-nam"); //FIXME hard-coded for now
 
     const [gisJoin, setGisJoin] = useState("");
     const [open, setOpen] = useState(false);
-
-    console.log({selectedState})
-    console.log({selectedCounty})
 
     return (
         <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -40,27 +37,27 @@ export default function Main() {
                     <CustomAutocomplete
                         label="Choose a State"
                         options={stateArray}
-                        state={{ setSelectedState, setCounties, setSelectedCounty }}
+                        state={{ setSelectedState, setCounties, setSelectedCounty, selectedState }}
                         disabled={false}
                         type="state"
                     />
                     <CustomAutocomplete
                         label="Choose a County"
                         options={counties}
-                        state={{ setSelectedCounty }}
+                        state={{ setSelectedCounty, selectedCounty }}
                         disabled={selectedState === ""}
                         type="county"
                     />
                     <CustomAutocomplete
                         label="Choose a Dataset"
                         options={[]} //FIXME hard-coded for now
-                        state={{ setCollection }}
+                        state={{ setCollection, collection }}
                         disabled={true} //FIXME hard-coded for now
                         type="dataset"
                     />
                     <CustomRadios options={timePeriods} set={setTimePeriod} access={timePeriod} label="Time Period" />
                     <CustomRadios options={timeSteps} set={setTimeStep} access={timeStep} label="Time Step" />
-                    <Button variant="outlined" disabled={disableSubmit()} onClick={handleSubmit}>Submit</Button>
+                    <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
                 </Grid>
             </Paper>
                 <Response state={{ open, setOpen, gisJoin, collection, field, timePeriod, timeStep }} />
@@ -79,9 +76,5 @@ export default function Main() {
     function handleSubmit() {
         setOpen(true)
         findGISJoin();
-    }
-
-    function disableSubmit() {
-        return selectedState === "" && selectedCounty === "";
     }
 }
