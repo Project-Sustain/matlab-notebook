@@ -14,15 +14,7 @@ const useStyles = makeStyles({
 
 export default function Response(props) {
     const classes = useStyles();
-    if(props.data.response) {
-        let returnObj = {
-            collection: props.data.collection,
-            field: props.data.field,
-            gisJoin: props.data.gisJoin,
-            perdiod: props.data.timePeriod,
-            timestep: parseInt(props.data.timeStep)
-        }
-
+    if(props.state.open) {
         const bracketLeft = "{"
         const bracketRight = "}"
         return (
@@ -31,24 +23,23 @@ export default function Response(props) {
                     <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start">
                         <Typography>{bracketLeft}</Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"collection": "{props.data.collection}",
+                            &emsp;&emsp;&emsp;&emsp;"collection": "{props.state.collection}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"field": "{props.data.field}",
+                            &emsp;&emsp;&emsp;&emsp;"field": "{props.state.field}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"gisJoin": "{props.data.gisJoin}",
+                            &emsp;&emsp;&emsp;&emsp;"gisJoin": "{props.state.gisJoin}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"perdiod": "{props.data.timePeriod}",
+                            &emsp;&emsp;&emsp;&emsp;"perdiod": "{props.state.timePeriod}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"timestep": {parseInt(props.data.timeStep)}
+                            &emsp;&emsp;&emsp;&emsp;"timestep": {parseInt(props.state.timeStep)}
                         </Typography>
                         <Typography>{bracketRight}</Typography>
                     </Grid>
-                    {/*<Typography>{JSON.stringify(returnObj)}</Typography>*/}
-                    <Button className={classes.button} variant="outlined" onClick={() => props.data.setResponse(false)}>Close</Button>
+                    <Button className={classes.button} variant="outlined" onClick={() => props.state.setOpen(false)}>Close</Button>
                 </Paper>
             </Grid>
         )
