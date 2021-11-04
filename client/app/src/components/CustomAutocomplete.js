@@ -5,7 +5,7 @@ import {countyMap} from "../utils/StateCountyMapping";
 
 const useStyles = makeStyles({
     root: {
-        width: "60%",
+        width: "45%",
         margin: "10px"
     },
 });
@@ -22,7 +22,10 @@ export default function CustomAutocomplete(props) {
         else if(props.type === "county") {
             props.state.setSelectedCounty(value);
         }
-        else if(props.type === "dataset") {
+        else if(props.type === "collection") {
+            // FIXME update selected dataset, once we have that available
+        }
+        else if(props.type === "field") {
             // FIXME update selected dataset, once we have that available
         }
     }
@@ -34,8 +37,11 @@ export default function CustomAutocomplete(props) {
         else if(props.type === "county") {
             return props.state.selectedCounty;
         }
-        else if(props.type === "dataset") {
+        else if(props.type === "collection") {
             return props.state.collection;
+        }
+        else if(props.type === "field") {
+            return props.state.field;
         }
     }
 

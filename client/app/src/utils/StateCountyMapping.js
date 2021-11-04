@@ -1,3 +1,5 @@
+import countyGIS from "./gis_county";
+
 export const countyMap = {
     "Alaska" : [
         "Aleutians East",
@@ -3296,6 +3298,8 @@ export const countyMap = {
         "nameChanger",
     ]
 }
+
+
 
 function buildStateArray() {
     let stateArray = [];

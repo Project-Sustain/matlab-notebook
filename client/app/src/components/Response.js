@@ -32,7 +32,7 @@ export default function Response(props) {
                             &emsp;&emsp;&emsp;&emsp;"gisJoin": "{props.state.gisJoin}",
                         </Typography>
                         <Typography>
-                            &emsp;&emsp;&emsp;&emsp;"perdiod": "{props.state.timePeriod}",
+                            &emsp;&emsp;&emsp;&emsp;"period": "{props.state.timePeriod}",
                         </Typography>
                         <Typography>
                             &emsp;&emsp;&emsp;&emsp;"timestep": {parseInt(props.state.timeStep)}
