@@ -8,14 +8,12 @@ import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sustain.matlab.eva.EvaController;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
-public class Query {
+public class MongoQuery {
 
-    public static Logger log = LoggerFactory.getLogger(Query.class);
+    public static Logger log = LoggerFactory.getLogger(MongoQuery.class);
 
     public static final String MONGO_HOST = "lattice-100";
     public static final Integer MONGO_PORT = 27018;
@@ -24,7 +22,7 @@ public class Query {
     public MongoCollection<Document> collection;
     public String databaseName, collectionName;
 
-    public Query(String databaseName, String collectionName) {
+    public MongoQuery(String databaseName, String collectionName) {
         this.databaseName = databaseName;
         this.collectionName = collectionName;
         this.mongoClient = MongoClients.create(
@@ -44,10 +42,11 @@ public class Query {
      * 2010020400 would be year 2010, month 02 (February), day 04, and hour 00.
      * @return
      */
-    public int[] getMinAndMaxDates() {
+    public List<Integer> getMinAndMaxDates() {
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
         AggregateIterable<Document> results = this.collection.aggregate(
                 List.of(
+                        Aggregates.match(Filters.eq("gis_join", "G1200870")),
                         Aggregates.group(
                                 null,
                                 Accumulators.max("max_date", "$year_month_day_hour")
@@ -65,7 +64,12 @@ public class Query {
             Integer max = first.getInteger("max_date");
             if (min != null && max != null) {
                 log.info("Successfully found min date {} and max date {}", min, max);
-                return new int[] {min, max};
+                return new ArrayList<>() {
+                    {
+                        add(min);
+                        add(max);
+                    }
+                };
             }
         }
         log.error("Unable to find min and max dates!");
@@ -104,53 +108,31 @@ public class Query {
         ])
      */
 
-    public void query(String databaseName, String collectionName, String field, String gisJoin, String period) {
-
-        System.err.println("Executing MongoDB Query...");
-
-
-
-        AggregateIterable<Document> filtered = collection.aggregate(
-                List.of(
-                        Aggregates.match(Aggregates.match(Filters.and(
-                                Filters.eq("gis_join", "G4100470"),
-                                Filters.eq("timestep", 0)
-                        )))
-                )
-        );
-
-
-        collection.aggregate(
+    public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Integer> periodBoundaries) {
+        log.info("Executing MongoDB query to find block extrema");
+        AggregateIterable<Document> results = collection.aggregate(
                 Arrays.asList(
                         Aggregates.match(Filters.and(
-                                Filters.eq("gis_join", "G4100470"),
-                                Filters.eq("timestep", 0)
+                                Filters.eq("gis_join", gisJoin),
+                                Filters.eq("timestep", timestep)
                         )),
                         Aggregates.bucket(
                                 "$year_month_day_hour",
-                                Arrays.asList(
-                                        2010010100,
-                                        2010010700,
-                                        2010011400,
-                                        2010012100,
-                                        2010012800,
-                                        2010020400,
-                                        2010021100,
-                                        2010021800,
-                                        2010022500
-                                ),
+                                periodBoundaries,
                                 new BucketOptions()
-                                        .defaultBucket(2010030100)
                                         .output(
-                                                Accumulators.max("max_precip_kg_sq_meter", "$precipitable_water_kg_per_squared_meter")
+                                                Accumulators.max("$max_"+field, "$"+field)
                                         )
                         )
 
                 )
-        ).forEach(
-                x -> System.out.println(x.toJson())
         );
 
-        mongoClient.close();
+        List<Double> blockExtrema = new ArrayList<>();
+        for (Document result: results) {
+            blockExtrema.add(result.getDouble("max_"+field));
+        }
+
+        return blockExtrema;
     }
 }

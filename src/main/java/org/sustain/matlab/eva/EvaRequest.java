@@ -6,15 +6,17 @@ public class EvaRequest {
 
     public String collection;
     public String field;
+    public String gisJoin;
     public String period;
-    public List<Double> extrema;
+    public Integer timestep;
 
     @Override
     public String toString() {
         return "EvaRequest:\n" +
                 String.format("\tcollection: %s\n", this.collection) +
                 String.format("\tfield: %s\n", this.field) +
+                String.format("\tgisJoin: %s\n", this.gisJoin) +
                 String.format("\tperiod: %s\n", this.period) +
-                String.format("\textrema: %s\n", this.extrema);
+                String.format("\ttimestep: %s\n", this.timestep);
     }
 }

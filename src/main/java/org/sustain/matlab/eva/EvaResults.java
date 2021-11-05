@@ -16,8 +16,14 @@ public class EvaResults {
 
     @Override
     public String toString() {
-        return "EvaResults:\n" +
-                String.format("\terrorOccurred: %b\n", this.errorOccurred) +
-                String.format("\terrorMessage: %s\n", this.errorMessage);
+        StringBuilder sb = new StringBuilder("EvaResults:\n");
+        sb.append(String.format("\terrorOccurred: %b\n", this.errorOccurred));
+        sb.append(String.format("\terrorMessage: %s\n", this.errorMessage));
+        sb.append("\textremeValueAnalysisResults:\n");
+        for (List<Double> resultList: this.extremeValueAnalysisResults) {
+            sb.append(resultList);
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }

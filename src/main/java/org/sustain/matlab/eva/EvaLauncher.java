@@ -1,18 +1,22 @@
 package org.sustain.matlab.eva;
 
 import com.mathworks.engine.MatlabEngine;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sustain.mongodb.MongoQuery;
+
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class EvaLauncher {
 
-    public static EvaResults launchExtremeValueAnalysis(MatlabEngine engine, double[] extrema) {
-        try {
+    public static Logger log = LoggerFactory.getLogger(MongoQuery.class);
 
-            engine.eval("cd /Users/carlsonc/Jetbrains/IntelliJ/matlab-notebook/ProNEVA/");
+    public static EvaResults launchExtremeValueAnalysis(MatlabEngine engine, double[] extrema) {
+        log.info("Launching Extreme Value Analysis with ProNEVA...");
+        try {
+            engine.eval("cd ProNEVA/");
             Object[] outputs = engine.feval(7, "runProNEVA", (Object) extrema);
 
             // Collect results into List<Double>
