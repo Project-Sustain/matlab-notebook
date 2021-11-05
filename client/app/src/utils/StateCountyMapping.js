@@ -1,6 +1,6 @@
-import countyGIS from "./gis_county";
+import {countyGIS} from "./gis_county";
 
-export const countyMap = {
+const countyMapping = {
     "Alaska" : [
         "Aleutians East",
         "Aleutians West",
@@ -3299,14 +3299,65 @@ export const countyMap = {
     ]
 }
 
+function buildData() {
+    let data = {};
+    const stateArray = buildStateArray();
+    stateArray.forEach((state) => {
+        data[`${state}`] = [];
+    });
+    const finalData = addCounties(data);
+    return finalData;
+}
 
+function addCounties(stateArray) {
+    let masterMap = {...stateArray};
+    countyGIS.forEach((county) => {
+        const nameAsArray = county.name.split(" ");
+        const names = extractStateCountyName(nameAsArray)
+        const stateName = names[0];
+        if(Object.keys(masterMap).includes(stateName)) {
+            const countyName = names[1];
+            // const GISJOIN = county.GISJOIN;
+            // let countyObj = {
+            //     GISJOIN: GISJOIN,
+            //     name: countyName
+            // };
+            masterMap[stateName].push(countyName);
+        }
+    });
+    return masterMap;
+}
+
+function findTheComma(nameAsArray) {
+    let spot = 0;
+    nameAsArray.forEach((word, index) => {
+        if(word.charAt(word.length-1) === ",") {
+            spot = index+1;
+        }
+    })
+    return spot;
+}
+
+function extractStateCountyName(nameAsArray) {
+    const indexOfStateName = findTheComma(nameAsArray);
+    if(indexOfStateName !== 0) {
+        const stateName = nameAsArray.splice(indexOfStateName, nameAsArray.length-1).join(" ");
+        let tempCountyName = nameAsArray.splice(0, indexOfStateName).join(" ");
+        const countyName = tempCountyName.substr(0, tempCountyName.length-1);
+        return [stateName, countyName];
+    }
+    return ["", ""];
+}
+
+export const countyMap = buildData();
 
 function buildStateArray() {
     let stateArray = [];
-    for(const [key] of Object.entries(countyMap)) {
+    for(const [key] of Object.entries(countyMapping)) {
         stateArray.push(key);
     }
     return stateArray;
 }
+
 
 export const stateArray = buildStateArray();

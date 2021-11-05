@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Grid, makeStyles, Paper} from "@material-ui/core";
 import CustomAutocomplete from "./CustomAutocomplete";
-import {stateArray} from "../utils/StateCountyMapping";
+import {stateArray, countyMap} from "../utils/StateCountyMapping";
 import CustomRadios from "./CustomRadios";
 import {countyGIS} from "../utils/gis_county";
 import Response from "./Response";
@@ -19,6 +19,8 @@ export default function Main() {
     const timePeriods = ["year", "month", "day", "hour"];
     const timeSteps = ["0", "3", "6"];
 
+    console.log({countyMap})
+
     const [selectedState, setSelectedState] = useState("Colorado");
     const [counties, setCounties] = useState([]);
     const [selectedCounty, setSelectedCounty] = useState("Larimer");
@@ -26,8 +28,6 @@ export default function Main() {
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
     const [field, setField] = useState("total_precipitation_kg_per_squared_meter"); //FIXME hard-coded for now
     const [collection, setCollection] = useState("noaa-nam"); //FIXME hard-coded for now
-
-    console.log({counties})
 
     const [gisJoin, setGisJoin] = useState("");
     const [open, setOpen] = useState(false);
