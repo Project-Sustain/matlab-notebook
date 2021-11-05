@@ -20,7 +20,6 @@ export default function Main() {
     const timeSteps = ["0", "3", "6"];
 
     const [selectedState, setSelectedState] = useState("Colorado");
-    const [counties, setCounties] = useState(countyMap["Colorado"].counties);
     const [selectedCounty, setSelectedCounty] = useState(countyMap["Colorado"].counties[0]);
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
@@ -37,7 +36,7 @@ export default function Main() {
                     <CustomAutocomplete
                         label="Choose a State"
                         options={stateArray}
-                        state={{ setSelectedState, setCounties, setSelectedCounty, selectedState, setGisJoin }}
+                        state={{ setSelectedState, setSelectedCounty, selectedState, setGisJoin }}
                         disabled={false}
                         type="state"
                     />
@@ -52,7 +51,7 @@ export default function Main() {
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <CustomAutocomplete
                         label="Choose a County"
-                        options={counties}
+                        options={countyMap[`${selectedState}`].counties}
                         state={{ setSelectedCounty, selectedCounty, setGisJoin }}
                         disabled={selectedState === ""}
                         type="county"
