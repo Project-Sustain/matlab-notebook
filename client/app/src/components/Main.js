@@ -19,11 +19,9 @@ export default function Main() {
     const timePeriods = ["year", "month", "day", "hour"];
     const timeSteps = ["0", "3", "6"];
 
-    console.log({countyMap})
-
     const [selectedState, setSelectedState] = useState("Colorado");
-    const [counties, setCounties] = useState([]);
-    const [selectedCounty, setSelectedCounty] = useState("Larimer");
+    const [counties, setCounties] = useState(countyMap["Colorado"].counties);
+    const [selectedCounty, setSelectedCounty] = useState(countyMap["Colorado"].counties[0]);
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
     const [field, setField] = useState("total_precipitation_kg_per_squared_meter"); //FIXME hard-coded for now
@@ -39,7 +37,7 @@ export default function Main() {
                     <CustomAutocomplete
                         label="Choose a State"
                         options={stateArray}
-                        state={{ setSelectedState, setCounties, setSelectedCounty, selectedState }}
+                        state={{ setSelectedState, setCounties, setSelectedCounty, selectedState, setGisJoin }}
                         disabled={false}
                         type="state"
                     />
@@ -55,7 +53,7 @@ export default function Main() {
                     <CustomAutocomplete
                         label="Choose a County"
                         options={counties}
-                        state={{ setSelectedCounty, selectedCounty }}
+                        state={{ setSelectedCounty, selectedCounty, setGisJoin }}
                         disabled={selectedState === ""}
                         type="county"
                     />
@@ -78,7 +76,7 @@ export default function Main() {
     )
 
     function findGISJoin() {
-        const searchString = `${selectedCounty} County, ${selectedState}`;
+        const searchString = `${selectedCounty}, ${selectedState}`;
         countyGIS.forEach((county) => {
             if(county.name === searchString) {
                 setGisJoin(county.GISJOIN);
