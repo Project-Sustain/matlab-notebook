@@ -60,27 +60,21 @@ public class MongoQuery {
                 )
         );
 
-        log.info("RESULTS: {}", results);
-        for (Document result:  results) {
-            log.info(result.toJson());
+        Document first = results.first();
+        if (first != null) {
+            Integer min = first.getInteger("min");
+            Integer max = first.getInteger("max");
+            if (min != null && max != null) {
+                log.info("Successfully found min date {} and max date {}", min, max);
+                return new ArrayList<>() {
+                    {
+                        add(min);
+                        add(max);
+                    }
+                };
+            }
         }
-
-//        Document first = results.first();
-//        if (first != null) {
-//            Integer min = first.getInteger("min_date");
-//            Integer max = first.getInteger("max_date");
-//            if (min != null && max != null) {
-//                log.info("Successfully found min date {} and max date {}", min, max);
-//                return new ArrayList<>() {
-//                    {
-//                        add(min);
-//                        add(max);
-//                    }
-//                };
-//            }
-//        }
-//        log.error("Unable to find min and max dates!");
-//        return null;
+        log.error("Unable to find min and max dates!");
         return null;
     }
 
