@@ -62,8 +62,8 @@ public class MongoQuery {
 
         Document first = results.first();
         if (first != null) {
-            Integer min = first.getInteger("min");
-            Integer max = first.getInteger("max");
+            Integer min = first.getLong("min") == null ? null : Math.toIntExact(first.getLong("min"));
+            Integer max = first.getLong("max") == null ? null : Math.toIntExact(first.getLong("max"));
             if (min != null && max != null) {
                 log.info("Successfully found min date {} and max date {}", min, max);
                 return new ArrayList<>() {
