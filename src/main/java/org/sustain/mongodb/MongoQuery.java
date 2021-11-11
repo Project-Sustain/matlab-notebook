@@ -123,7 +123,7 @@ public class MongoQuery {
                                 periodBoundaries,
                                 new BucketOptions()
                                         .output(
-                                                Accumulators.max("$max_"+field, "$"+field)
+                                                Accumulators.max("max_"+field, "$"+field)
                                         )
                         )
 
