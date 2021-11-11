@@ -53,17 +53,17 @@ public class MongoQuery {
                 List.of(
                         Aggregates.match(Filters.eq("GISJOIN", "G1200870")),
                         Aggregates.group(
-                                null,
-                                Accumulators.max("max_date", "$YYYYMMDDHH")
+                                "max_date",
+                                Accumulators.max("YYYYMMDDHH", "$YYYYMMDDHH")
                         ),
                         Aggregates.group(
-                                null,
-                                Accumulators.max("min_date", "$YYYYMMDDHH")
+                                "min_date",
+                                Accumulators.min("YYYYMMDDHH", "$YYYYMMDDHH")
                         )
                 )
         );
 
-        log.info("{}", results);
+        log.info("RESULTS: {}", results);
         for (Document result:  results) {
             log.info(result.toJson());
         }
