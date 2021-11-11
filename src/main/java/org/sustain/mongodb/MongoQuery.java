@@ -45,7 +45,7 @@ public class MongoQuery {
      * Retrieves the oldest date in the collection, and the most recent date in the collection.
      * The date is represented as an integer YYYYMMDDHH, i.e.:
      * 2010020400 would be year 2010, month 02 (February), day 04, and hour 00.
-     * @return
+     * @return min and max dates
      */
     public List<Integer> getMinAndMaxDates() {
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
