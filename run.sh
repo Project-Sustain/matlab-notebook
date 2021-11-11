@@ -1,3 +1,3 @@
 #!/bin/bash
 
-LD_LIBRARY_PATH="/usr/local/matlab/latest/bin/glnxa64:/usr/local/matlab/latest/sys/os/glnxa64" ./gradlew clean build && ./gradlew bootRun
+export LD_LIBRARY_PATH="/usr/local/matlab/latest/bin/glnxa64:/usr/local/matlab/latest/sys/os/glnxa64" && ./gradlew clean build && ./gradlew bootRun
