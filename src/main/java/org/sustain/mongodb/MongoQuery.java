@@ -54,7 +54,8 @@ public class MongoQuery {
                         Aggregates.match(Filters.eq("GISJOIN", "G1200870")),
                         Aggregates.group(
                                 null,
-                                Accumulators.max("max", "$YYYYMMDDHH")
+                                Accumulators.max("max", "$YYYYMMDDHH"),
+                                Accumulators.min("min", "$YYYYMMDDHH")
                         )
                 )
         );
