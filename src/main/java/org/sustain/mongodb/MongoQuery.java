@@ -18,8 +18,8 @@ public class MongoQuery {
     public static final String MONGO_HOST = "lattice-100";
     public static final Integer MONGO_PORT = 27018;
 
-    public transient MongoClient mongoClient;
-    public transient MongoCollection<Document> collection;
+    public MongoClient mongoClient;
+    public MongoCollection<Document> collection;
     public String databaseName, collectionName;
 
     public MongoQuery(String databaseName, String collectionName) {
@@ -46,17 +46,19 @@ public class MongoQuery {
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
         AggregateIterable<Document> results = this.collection.aggregate(
                 List.of(
-                        Aggregates.match(Filters.eq("gis_join", "G1200870")),
+                        Aggregates.match(Filters.eq("GISJOIN", "G1200870")),
                         Aggregates.group(
                                 null,
-                                Accumulators.max("max_date", "$year_month_day_hour")
+                                Accumulators.max("max_date", "$YYYYMMDDHH")
                         ),
                         Aggregates.group(
                                 null,
-                                Accumulators.max("min_date", "$year_month_day_hour")
+                                Accumulators.max("min_date", "$YYYYMMDDHH")
                         )
                 )
         );
+
+
 
         Document first = results.first();
         if (first != null) {
@@ -113,11 +115,11 @@ public class MongoQuery {
         AggregateIterable<Document> results = collection.aggregate(
                 Arrays.asList(
                         Aggregates.match(Filters.and(
-                                Filters.eq("gis_join", gisJoin),
-                                Filters.eq("timestep", timestep)
+                                Filters.eq("GISJOIN", gisJoin),
+                                Filters.eq("TIMESTEP", timestep)
                         )),
                         Aggregates.bucket(
-                                "$year_month_day_hour",
+                                "$YYYYMMDDHH",
                                 periodBoundaries,
                                 new BucketOptions()
                                         .output(
