@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.sustain.mongodb.MongoQuery;
 
-@SpringBootApplication(exclude= MongoQuery.class)
+@SpringBootApplication
 public class MatlabApplication {
 
 	public static Logger log = LoggerFactory.getLogger(MatlabApplication.class);

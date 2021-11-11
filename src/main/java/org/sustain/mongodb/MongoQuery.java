@@ -28,7 +28,12 @@ public class MongoQuery {
         this.mongoClient = MongoClients.create(
                 MongoClientSettings.builder()
                         .applyToClusterSettings(builder ->
-                                builder.hosts(List.of(new ServerAddress(MONGO_HOST, MONGO_PORT))))
+                                builder.hosts(
+                                        List.of(
+                                                new ServerAddress(MONGO_HOST, MONGO_PORT)
+                                        )
+                                )
+                        )
                         .build()
         );
 
