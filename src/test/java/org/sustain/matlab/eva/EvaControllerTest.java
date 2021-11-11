@@ -26,7 +26,8 @@ public class EvaControllerTest {
                 202108010000L,
                 202109010000L,
                 202110010000L,
-                maxDate
+                202111010000L,
+                202112010000L
         ));
 
         List<Long> actual = EvaController.getDateBoundariesByPeriod("month", minDate, maxDate);
