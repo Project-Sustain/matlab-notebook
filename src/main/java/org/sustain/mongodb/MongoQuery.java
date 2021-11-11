@@ -18,8 +18,8 @@ public class MongoQuery {
     public static final String MONGO_HOST = "lattice-100";
     public static final Integer MONGO_PORT = 27018;
 
-    public MongoClient mongoClient;
-    public MongoCollection<Document> collection;
+    public transient MongoClient mongoClient;
+    public transient MongoCollection<Document> collection;
     public String databaseName, collectionName;
 
     public MongoQuery(String databaseName, String collectionName) {
