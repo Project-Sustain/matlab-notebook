@@ -101,7 +101,7 @@ public class EvaController implements InitializingBean {
         boundaries.add(minDateNumber); // start with minimum date as first boundary
 
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHH");
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHHH");
             Date minDate = format.parse(Long.toString(minDateNumber));
             Date maxDate = format.parse(Long.toString(maxDateNumber));
             Calendar calendar = Calendar.getInstance();
