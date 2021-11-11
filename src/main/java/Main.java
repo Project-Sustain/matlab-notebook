@@ -1,6 +1,10 @@
+import org.sustain.mongodb.MongoQuery;
 
 public class Main {
+
     public static void main(String[] programArgs) {
-        System.out.println("Hello world!");
+        MongoQuery testQuery = new MongoQuery("sustaindb", "noaa_nam");
+        testQuery.getMinAndMaxDates();
     }
+
 }
