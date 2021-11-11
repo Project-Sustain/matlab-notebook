@@ -19,7 +19,9 @@ dependencies {
 
 	// For MongoDB
 	//implementation group: 'com.mongodb', name: 'mongo-java-driver', version: '2.7.1'
-  implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.3.3'
+  	implementation group: 'org.mongodb', name: 'mongodb-driver-sync', version: '4.3.3'
+	implementation group: 'org.mongodb', name: 'mongodb-driver-core', version: '4.3.3'
+	implementation group: 'org.mongodb', name: 'bson', version: '4.3.3'
 
 	// For Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.5.5'
