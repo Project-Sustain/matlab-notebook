@@ -68,7 +68,7 @@ public class EvaController implements InitializingBean {
 
         log.info("Request: {}", request);
         MongoQuery mongoQuery = new MongoQuery("sustaindb", request.collection);
-        List<Long> minAndMaxDates = mongoQuery.getMinAndMaxDates();
+        List<Long> minAndMaxDates = mongoQuery.getMinAndMaxDates(request.gisJoin);
         Long min = minAndMaxDates.get(0);
         Long max = minAndMaxDates.get(1);
         List<Long> bucketBounds = getDateBoundariesByPeriod(request.period, min, max);

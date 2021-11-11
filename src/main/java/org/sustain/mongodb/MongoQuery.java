@@ -47,11 +47,11 @@ public class MongoQuery {
      * 2010020400 would be year 2010, month 02 (February), day 04, and hour 00.
      * @return min and max dates
      */
-    public List<Long> getMinAndMaxDates() {
+    public List<Long> getMinAndMaxDates(String gisJoin) {
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
         AggregateIterable<Document> results = this.collection.aggregate(
                 List.of(
-                        Aggregates.match(Filters.eq("GISJOIN", "G1200870")),
+                        Aggregates.match(Filters.eq("GISJOIN", gisJoin)),
                         Aggregates.group(
                                 null,
                                 Accumulators.max("max", "$YYYYMMDDHH"),
@@ -77,38 +77,6 @@ public class MongoQuery {
         log.error("Unable to find min and max dates!");
         return null;
     }
-
-    /*
-        use sustaindb;
-        db.noaa_nam.aggregate([
-          {
-            "$match": { "gis_join": "G4100470", "timestep": 0 }
-          },
-          {
-            "$bucket": {
-              "groupBy": "$year_month_day_hour",
-              "boundaries": [
-                2010010100,
-                2010010700,
-                2010011400,
-                2010012100,
-                2010012800,
-                2010020400,
-                2010021100,
-                2010021800,
-                2010022500
-              ],
-              "default": 2010030100,
-              "output": {
-                "max_precip_kg_sq_meter": { "$max": "$precipitable_water_kg_per_squared_meter" }
-              }
-            }
-          },
-          {
-            "$sort": { "_id": 1 }
-          }
-        ])
-     */
 
     public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Long> periodBoundaries) {
         log.info("Executing MongoDB query to find block extrema");
