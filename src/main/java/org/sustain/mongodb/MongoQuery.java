@@ -63,6 +63,7 @@ public class MongoQuery {
                 )
         );
 
+        log.info("{}", results);
         for (Document result:  results) {
             log.info(result.toJson());
         }
