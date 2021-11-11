@@ -68,9 +68,9 @@ public class EvaController implements InitializingBean {
 
         log.info("Request: {}", request);
         MongoQuery mongoQuery = new MongoQuery("sustaindb", request.collection);
-        List<Integer> minAndMaxDates = mongoQuery.getMinAndMaxDates();
-        Integer min = minAndMaxDates.get(0);
-        Integer max = minAndMaxDates.get(1);
+        List<Long> minAndMaxDates = mongoQuery.getMinAndMaxDates();
+        Long min = minAndMaxDates.get(0);
+        Long max = minAndMaxDates.get(1);
         List<Integer> bucketBounds = getDateBoundariesByPeriod(request.period, min, max);
         List<Double> blockExtrema = mongoQuery.findBlockExtrema(
                 request.field, request.gisJoin, request.timestep, bucketBounds
@@ -96,14 +96,14 @@ public class EvaController implements InitializingBean {
      * For example, if the list [2010010100, 2010010200, 2010010300] is returned, then the first bucket period is
      * from Jan 1, 2010 to Jan 31, 2010, and the second bucket period is from Feb 1, 2010 to Feb 27/28, 2010.
      */
-    public static List<Integer> getDateBoundariesByPeriod(String period, Integer minDateNumber, Integer maxDateNumber) {
-        List<Integer> boundaries = new ArrayList<>();
+    public static List<Long> getDateBoundariesByPeriod(String period, Long minDateNumber, Long maxDateNumber) {
+        List<Long> boundaries = new ArrayList<>();
         boundaries.add(minDateNumber); // start with minimum date as first boundary
 
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHH");
-            Date minDate = format.parse(Integer.toString(minDateNumber));
-            Date maxDate = format.parse(Integer.toString(maxDateNumber));
+            Date minDate = format.parse(Long.toString(minDateNumber));
+            Date maxDate = format.parse(Long.toString(maxDateNumber));
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(minDate);
 
@@ -131,7 +131,7 @@ public class EvaController implements InitializingBean {
             while (calendar.getTime().before(maxDate)) {
                 calendar.add(field, amount);
                 Date boundaryDate = calendar.getTime();
-                boundaries.add(Integer.parseInt(format.format(boundaryDate)));
+                boundaries.add(Long.parseLong(format.format(boundaryDate)));
             }
         } catch (ParseException e) {
             log.error("Unable to parse date: {}", e.getMessage());

@@ -47,7 +47,7 @@ public class MongoQuery {
      * 2010020400 would be year 2010, month 02 (February), day 04, and hour 00.
      * @return min and max dates
      */
-    public List<Integer> getMinAndMaxDates() {
+    public List<Long> getMinAndMaxDates() {
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
         AggregateIterable<Document> results = this.collection.aggregate(
                 List.of(
@@ -62,8 +62,8 @@ public class MongoQuery {
 
         Document first = results.first();
         if (first != null) {
-            Integer min = first.getLong("min") == null ? null : Math.toIntExact(first.getLong("min"));
-            Integer max = first.getLong("max") == null ? null : Math.toIntExact(first.getLong("max"));
+            Long min = first.getLong("min");
+            Long max = first.getLong("max");
             if (min != null && max != null) {
                 log.info("Successfully found min date {} and max date {}", min, max);
                 return new ArrayList<>() {

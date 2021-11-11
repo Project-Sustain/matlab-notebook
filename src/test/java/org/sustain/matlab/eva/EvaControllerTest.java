@@ -12,16 +12,24 @@ public class EvaControllerTest {
     @Test
     public void testGetDateBoundariesByPeriod() {
 
-        Integer minDate = 2010010100;
-        Integer maxDate = 2010010400;
-        List<Integer> expected = new ArrayList<>(List.of(
+        Long minDate = 202101010000L;
+        Long maxDate = 202110230600L;
+        List<Long> expected = new ArrayList<>(List.of(
                 minDate,
-                2010010200,
-                2010010300,
+                202102010000L,
+                202102010000L,
+                202103010000L,
+                202104010000L,
+                202105010000L,
+                202106010000L,
+                202107010000L,
+                202108010000L,
+                202109010000L,
+                202110010000L,
                 maxDate
         ));
 
-        List<Integer> actual = EvaController.getDateBoundariesByPeriod("day", minDate, maxDate);
+        List<Long> actual = EvaController.getDateBoundariesByPeriod("month", minDate, maxDate);
         assertEquals(expected, actual);
     }
 }
