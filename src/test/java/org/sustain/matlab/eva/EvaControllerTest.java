@@ -30,6 +30,7 @@ public class EvaControllerTest {
         ));
 
         List<Long> actual = EvaController.getDateBoundariesByPeriod("month", minDate, maxDate);
+        System.out.println(actual);
         assertEquals(expected, actual);
     }
 }
