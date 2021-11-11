@@ -23,8 +23,8 @@ export default function Main() {
     const [selectedCounty, setSelectedCounty] = useState(countyMap["Colorado"].counties[0]);
     const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
-    const [field, setField] = useState("total_precipitation_kg_per_squared_meter"); //FIXME hard-coded for now
-    const [collection, setCollection] = useState("noaa-nam"); //FIXME hard-coded for now
+    const [field, setField] = useState("TEMPERATURE_AT_SURFACE_KELVIN"); //FIXME hard-coded for now
+    const [collection, setCollection] = useState("noaa_nam"); //FIXME hard-coded for now
 
     const [gisJoin, setGisJoin] = useState("");
     const [open, setOpen] = useState(false);
