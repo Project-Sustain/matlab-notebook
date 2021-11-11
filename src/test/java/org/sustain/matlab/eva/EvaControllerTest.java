@@ -15,8 +15,7 @@ public class EvaControllerTest {
         Long minDate = 202101010000L;
         Long maxDate = 202110230600L;
         List<Long> expected = new ArrayList<>(List.of(
-                minDate,
-                202102010000L,
+                202101010000L,
                 202102010000L,
                 202103010000L,
                 202104010000L,
