@@ -110,7 +110,7 @@ public class MongoQuery {
         ])
      */
 
-    public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Integer> periodBoundaries) {
+    public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Long> periodBoundaries) {
         log.info("Executing MongoDB query to find block extrema");
         AggregateIterable<Document> results = collection.aggregate(
                 Arrays.asList(

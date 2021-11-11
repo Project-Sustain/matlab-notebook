@@ -71,7 +71,7 @@ public class EvaController implements InitializingBean {
         List<Long> minAndMaxDates = mongoQuery.getMinAndMaxDates();
         Long min = minAndMaxDates.get(0);
         Long max = minAndMaxDates.get(1);
-        List<Integer> bucketBounds = getDateBoundariesByPeriod(request.period, min, max);
+        List<Long> bucketBounds = getDateBoundariesByPeriod(request.period, min, max);
         List<Double> blockExtrema = mongoQuery.findBlockExtrema(
                 request.field, request.gisJoin, request.timestep, bucketBounds
         );
