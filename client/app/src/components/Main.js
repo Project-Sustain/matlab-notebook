@@ -25,7 +25,6 @@ export default function Main() {
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
     const [field, setField] = useState("TEMPERATURE_AT_SURFACE_KELVIN"); //FIXME hard-coded for now
     const [collection, setCollection] = useState("noaa_nam"); //FIXME hard-coded for now
-
     const [gisJoin, setGisJoin] = useState("");
     const [open, setOpen] = useState(false);
 
@@ -70,7 +69,7 @@ export default function Main() {
                     <Button variant="outlined" onClick={handleSubmit}>Submit</Button>
                 </Grid>
             </Paper>
-                <Response state={{ open, setOpen, gisJoin, collection, field, timePeriod, timeStep }} />
+            <Response state={{ open, setOpen, gisJoin, collection, field, timePeriod, timeStep }} />
         </Grid>
     )
 
@@ -84,7 +83,56 @@ export default function Main() {
     }
 
     function handleSubmit() {
-        setOpen(true)
         findGISJoin();
+        setOpen(true);
+        let requestBody = {
+            "collection": collection,
+            "field": field,
+            "gisJoin": gisJoin,
+            "period": timePeriod,
+            "timestep": timeStep
+        };
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8081/eva";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var json = JSON.parse(xhr.responseText);
+                console.log(json);
+            }
+        };
+        var data = JSON.stringify(requestBody);
+        xhr.send(data);
+    }
+
+    function sendServerRequestWithBody(requestBody, serverPort=8081) {
+        const restfulAPI = `http://lattice-100:${serverPort}/eva`;
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            mode: 'no-cors',
+            body: JSON.stringify(requestBody)
+        };
+        return processRestfulAPI(restfulAPI, requestOptions);
+    }
+    
+    async function processRestfulAPI(restfulAPI, requestOptions) {
+        try {
+            console.log(requestOptions)
+            let response = await fetch(restfulAPI, requestOptions);
+            console.log(response);
+            return {
+                statusCode: response.status,
+                statusText: response.statusText,
+                body: await response.json()
+            };
+        } catch(err) {
+            console.error(err);
+            return { statusCode: 0, statusText: 'Client failure', body: null };
+        }
     }
 }
