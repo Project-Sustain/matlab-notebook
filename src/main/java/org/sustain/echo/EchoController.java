@@ -15,7 +15,7 @@ public class EchoController {
     public static Logger log = LoggerFactory.getLogger(EchoController.class);
 
     @PostMapping("/echo")
-    @CrossOrigin(origins = "http://localhost:8081")
+    @CrossOrigin(origins = "http://localhost:3000")
     public EchoResponse echoPostRequest(@RequestBody EchoRequest request) {
         log.info("Received echo POST request: {}", request);
         return new EchoResponse(request);
