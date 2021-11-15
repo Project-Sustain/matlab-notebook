@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Button, Grid, makeStyles, Paper} from "@material-ui/core";
 import CustomAutocomplete from "./CustomAutocomplete";
 import {stateArray, countyMap} from "../utils/StateCountyMapping";
+import {sendServerRequestWithBody} from "../utils/requests"
 import CustomRadios from "./CustomRadios";
 import {countyGIS} from "../utils/gis_county";
 import Response from "./Response";
@@ -92,47 +93,11 @@ export default function Main() {
             "period": timePeriod,
             "timestep": timeStep
         };
-        var xhr = new XMLHttpRequest();
-        var url = "http://localhost:8081/eva";
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                var json = JSON.parse(xhr.responseText);
-                console.log(json);
+        sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody).then(response =>
+            {
+                console.log(response);
             }
-        };
-        var data = JSON.stringify(requestBody);
-        xhr.send(data);
+        );
     }
-
-    function sendServerRequestWithBody(requestBody, serverPort=8081) {
-        const restfulAPI = `http://lattice-100:${serverPort}/eva`;
-        const requestOptions = {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            mode: 'no-cors',
-            body: JSON.stringify(requestBody)
-        };
-        return processRestfulAPI(restfulAPI, requestOptions);
-    }
-
-    async function processRestfulAPI(restfulAPI, requestOptions) {
-        try {
-            console.log(requestOptions)
-            let response = await fetch(restfulAPI, requestOptions);
-            console.log(response);
-            return {
-                statusCode: response.status,
-                statusText: response.statusText,
-                body: await response.json()
-            };
-        } catch(err) {
-            console.error(err);
-            return { statusCode: 0, statusText: 'Client failure', body: null };
-        }
-    }
+    
 }
