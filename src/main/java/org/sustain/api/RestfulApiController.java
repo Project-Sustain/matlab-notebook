@@ -17,7 +17,6 @@ import org.sustain.matlab.eva.ExtremeValueAnalysis;
 import javax.annotation.PreDestroy;
 
 @RestController
-@Component
 public class RestfulApiController implements InitializingBean  {
 
     public static Logger log = LoggerFactory.getLogger(RestfulApiController.class);
