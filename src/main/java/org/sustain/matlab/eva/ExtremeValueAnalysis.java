@@ -1,10 +1,7 @@
 package org.sustain.matlab.eva;
 
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import org.slf4j.Logger;
@@ -13,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.mathworks.engine.*;
 import org.sustain.mongodb.MongoQuery;
 
-import javax.annotation.PreDestroy;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,40 +17,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@RestController
-@Component
-public class EvaController implements InitializingBean {
+public class ExtremeValueAnalysis {
 
-    public static Logger log = LoggerFactory.getLogger(EvaController.class);
-
-    private static MatlabEngine engine;
-
-    @Override
-    public void afterPropertiesSet() {
-        try {
-            log.info("Starting MATLAB engine...");
-            String[] matlabEngineOptions = new String[] {
-                    "-nodisplay",   // Do not display any X commands. The MATLAB desktop will not be started.
-                    "-nosplash"     // Do not display the splash screen during startup.
-            };
-            engine = MatlabEngine.startMatlab(matlabEngineOptions);
-            log.info("MATLAB engine successfully started");
-        } catch (Exception e) {
-            log.error("Unable to start MATLAB engine from afterPropertiesSet(): {}", e.getMessage());
-            System.exit(1);
-        }
-    }
-
-    @PreDestroy
-    public void destroy() {
-        try {
-            log.info("Shutting down MATLAB engine...");
-            engine.close();
-            log.info("MATLAB engine successfully shut down");
-        } catch (EngineException e) {
-            log.error("Unable to shut down MATLAB engine gracefully: {}", e.getMessage());
-        }
-    }
+    public static Logger log = LoggerFactory.getLogger(ExtremeValueAnalysis.class);
 
     /**
      * Calculates Extreme Value Analysis on the extrema specified by the request.
@@ -64,9 +29,7 @@ public class EvaController implements InitializingBean {
      * @param request EvaRequest object specifying field, gisJoin, and period over which to run EVA.
      * @return The results from ProNEVA, in the form of a EvaResponse object.
      */
-    @PostMapping("/eva")
-    @CrossOrigin(origins = "http://localhost:8081")
-    public EvaResponse extremeValueAnalysisRequest(@RequestBody EvaRequest request) {
+    public static EvaResponse extremeValueAnalysisRequest(EvaRequest request, MatlabEngine engine) {
 
         log.info("Request: {}", request);
         MongoQuery mongoQuery = new MongoQuery("sustaindb", request.collection);

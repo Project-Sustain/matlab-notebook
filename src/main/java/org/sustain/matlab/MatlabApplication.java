@@ -14,6 +14,7 @@ public class MatlabApplication {
 
 	public static void main(String[] args) {
 		log.info("Starting MatlabApplication v{}", VERSION);
+
 		SpringApplication.run(MatlabApplication.class, args);
 	}
 
