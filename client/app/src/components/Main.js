@@ -25,7 +25,6 @@ export default function Main() {
     const [timeStep, setTimeStep] = useState(timeSteps[0]);
     const [field, setField] = useState("TEMPERATURE_AT_SURFACE_KELVIN"); //FIXME hard-coded for now
     const [collection, setCollection] = useState("noaa_nam"); //FIXME hard-coded for now
-
     const [gisJoin, setGisJoin] = useState("");
     const [open, setOpen] = useState(false);
 
@@ -86,5 +85,6 @@ export default function Main() {
     function handleSubmit() {
         setOpen(true)
         findGISJoin();
+        console.log()
     }
 }
