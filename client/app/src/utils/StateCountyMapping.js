@@ -53,6 +53,20 @@ export const stateArray = [
     "Wyoming",
 ]
 
+function buildJsonObject() {
+    let data = {
+        "states": []
+    };
+    stateArray.forEach((state) => {
+        data["states"].push(
+            {
+                "GISJOIN": "",
+                "counties": []
+            }
+        )
+    });
+}
+
 function buildData() {
     let data = {};
     stateArray.forEach((state) => {

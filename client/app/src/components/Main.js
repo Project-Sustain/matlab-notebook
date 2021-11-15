@@ -93,11 +93,15 @@ export default function Main() {
             "period": timePeriod,
             "timestep": timeStep
         };
-        sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody).then(response =>
-            {
+
+        if (gisJoin !== "") {
+            sendServerRequestWithBody("localhost", 8081, "eva", requestBody)
+            .then(response => {
                 console.log(response);
-            }
-        );
+            });
+        } else {
+            console.log("gisJoin is empty");
+        }
     }
     
 }
