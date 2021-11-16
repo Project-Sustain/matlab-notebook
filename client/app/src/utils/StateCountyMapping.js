@@ -1,5 +1,7 @@
 import {countyGIS} from "./gis_county";
 
+
+
 export const stateArray = [
     "Alaska",
     "Alabama",
@@ -52,20 +54,6 @@ export const stateArray = [
     "West Virginia",
     "Wyoming",
 ]
-
-function buildJsonObject() {
-    let data = {
-        "states": []
-    };
-    stateArray.forEach((state) => {
-        data["states"].push(
-            {
-                "GISJOIN": "",
-                "counties": []
-            }
-        )
-    });
-}
 
 function buildData() {
     let data = {};
