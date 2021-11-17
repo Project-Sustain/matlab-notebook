@@ -1,0 +1,225 @@
+{
+    "NOAA NAM": {
+        "name": "NOAA NAM",
+        "collection": "noaa_nam",
+        "supportedFields": {
+            "Pressure (Reduced to Mean Sea Level)": {
+                "name": "Pressure (Reduced to Mean Sea Level)",
+                "field": "PRESSURE_REDUCED_TO_MSL_PASCAL",
+                "unit": "Pascal",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Visibility at Surface": {
+                "name": "Visibility at Surface",
+                "field": "VISIBILITY_AT_SURFACE_METERS",
+                "unit": "Meters",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Visibility at Cloud Top": {
+                "name": "Visibility at Cloud Top",
+                "field": "VISIBILITY_AT_CLOUD_TOP_METERS",
+                "unit": "Meters",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "U Component of Wind at Planetary Boundary Layer": {
+                "name": "U Component of Wind at Planetary Boundary Layer",
+                "field": "U_COMPONENT_OF_WIND_AT_PLANETARY_BOUNDARY_LAYER_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "V Component of Wind at Planetary Boundary Layer": {
+                "name": "V Component of Wind at Planetary Boundary Layer",
+                "field": "V_COMPONENT_OF_WIND_AT_PLANETARY_BOUNDARY_LAYER_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Wind Gust Speed at Surface": {
+                "name": "Wind Gust Speed at Surface",
+                "field": "WIND_GUST_SPEED_AT_SURFACE_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Pressure at Surface": {
+                "name": "Pressure at Surface",
+                "field": "PRESSURE_AT_SURFACE_PASCAL",
+                "unit": "Pascal",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Temperature at Surface": {
+                "name": "Temperature at Surface",
+                "field": "TEMPERATURE_AT_SURFACE_KELVIN",
+                "unit": "Kelvin",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Soil Temperature 0 to 0.1 Meters Below Surface": {
+                "name": "Soil Temperature 0 to 0.1 Meters Below Surface",
+                "field": "SOIL_TEMPERATURE_0_TO_01_M_BELOW_SURFACE_KELVIN",
+                "unit": "Kelvin",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Volumetric Soil Moisture Content 0 to 0.1 Meters Below Surface": {
+                "name": "Volumetric Soil Moisture Content 0 to 0.1 Meters Below Surface",
+                "field": "VOLUMETRIC_SOIL_MOISTURE_CONTENT_0_TO_0",
+                "unit": "Fraction",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Snow Cover at Surface": {
+                "name": "Snow Cover at Surface",
+                "field": "SNOW_COVER_AT_SURFACE_PERCENT",
+                "unit": "Percent",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Snow Depth at Surface": {
+                "name": "Snow Depth at Surface",
+                "field": "SNOW_DEPTH_AT_SURFACE_METERS",
+                "unit": "Meters",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Temperature 2 Meters Above Surface": {
+                "name": "Temperature 2 Meters Above Surface",
+                "field": "TEMPERATURE_2_METERS_ABOVE_SURFACE_KELVIN",
+                "unit": "Kelvin",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Dewpoint Temperature 2 Meters Above Surface": {
+                "name": "Dewpoint Temperature 2 Meters Above Surface",
+                "field": "DEWPOINT_TEMPERATURE_2_METERS_ABOVE_SURFACE_KELVIN",
+                "unit": "Kelvin",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Relative Humidity 2 Meters Above Surface": {
+                "name": "Relative Humidity 2 Meters Above Surface",
+                "field": "RELATIVE_HUMIDITY_2_METERS_ABOVE_SURFACE_PERCENT",
+                "unit": "Percent",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "U Component of Wind 2 Meters Above Surface": {
+                "name": "U Component of Wind 2 Meters Above Surface",
+                "field": "U_COMPONENT_OF_WIND_2_METERS_ABOVE_SURFACE_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "V Component of Wind 2 Meters Above Surface": {
+                "name": "V Component of Wind 2 Meters Above Surface",
+                "field": "V_COMPONENT_OF_WIND_2_METERS_ABOVE_SURFACE_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Total Precipitation at Surface": {
+                "name": "Total Precipitation at Surface",
+                "field": "TOTAL_PRECIPITATION_SURFACE_ACCUM_KG_PER_SQ_METER",
+                "unit": "Kilograms per Squared Meter",
+                "type": "Double",
+                "accumulationOrInstant": "Accumulation"
+            },
+            "Convective Precipitation at Surface": {
+                "name": "Convective Precipitation at Surface",
+                "field": "CONVECTIVE_PRECIPITATION_SURFACE_ACCUM_KG_PER_SQ_METER",
+                "unit": "Kilograms per Squared Meter",
+                "type": "Double",
+                "accumulationOrInstant": "Accumulation"
+            },
+            "Geopotential Height at Lowest Level Wet Bulb Zero": {
+                "name": "Geopotential Height at Lowest Level Wet Bulb Zero",
+                "field": "GEOPOTENTIAL_HEIGHT_LOWEST_LEVEL_WET_BULB_ZERO_GPM",
+                "unit": "Geopotential Meters",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Categorical Snow at Surface": {
+                "name": "Categorical Snow at Surface",
+                "field": "CATEGORICAL_SNOW_SURFACE_BINARY",
+                "unit": "Binary",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Categorical Ice Pellets at Surface": {
+                "name": "Categorical Ice Pellets at Surface",
+                "field": "CATEGORICAL_ICE_PELLETS_SURFACE_BINARY",
+                "unit": "Binary",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Categorical Freezing Rain at Surface": {
+                "name": "Categorical Freezing Rain at Surface",
+                "field": "CATEGORICAL_FREEZING_RAIN_SURFACE_BINARY",
+                "unit": "Binary",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Categorical Rain at Surface": {
+                "name": "Categorical Rain at Surface",
+                "field": "CATEGORICAL_RAIN_SURFACE_BINARY",
+                "unit": "Binary",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Vegetation at Surface": {
+                "name": "Vegetation at Surface",
+                "field": "VEGETATION_SURFACE_PERCENT",
+                "unit": "Percent",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Vegetation Type (Simple Biosphere Model)": {
+                "name": "Vegetation Type (Simple Biosphere Model)",
+                "field": "VEGETATION_TYPE_SIB_INT",
+                "unit": "Identifier",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Soil Type (Zobler)": {
+                "name": "Soil Type (Zobler)",
+                "field": "SOIL_TYPE_ZOBLER_INT",
+                "unit": "Identifier",
+                "type": "Integer",
+                "accumulationOrInstant": "Instant"
+            },
+            "Pressure at Tropopause": {
+                "name": "Pressure at Tropopause",
+                "field": "PRESSURE_TROPOPAUSE_PASCAL",
+                "unit": "Pascal",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "Temperature at Tropopause": {
+                "name": "Temperature at Tropopause",
+                "field": "TEMPERATURE_TROPOPAUSE_KELVIN",
+                "unit": "Kelvin",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "U Component of Wind at Tropopause": {
+                "name": "U Component of Wind at Tropopause",
+                "field": "U_COMPONENT_OF_WIND_TROPOPAUSE_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            },
+            "V Component of Wind at Tropopause": {
+                "name": "V Component of Wind at Tropopause",
+                "field": "V_COMPONENT_OF_WIND_TROPOPAUSE_METERS_PER_SEC",
+                "unit": "Meters per Second",
+                "type": "Double",
+                "accumulationOrInstant": "Instant"
+            }
+        }
+    }
+}

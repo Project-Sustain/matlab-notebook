@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {TextField, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@material-ui/core";
+import {Button, TextField, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer,
+    FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, TableHead, TableRow} from "@material-ui/core";
 import { Autocomplete } from '@material-ui/lab';
 import CustomAutocomplete from "./CustomAutocomplete";
 import {stateArray, countyMap} from "../utils/StateCountyMapping";
@@ -8,6 +9,7 @@ import CustomRadios from "./CustomRadios";
 import Response from "./Response";
 
 var gisJoinJson = require('../resources/gis_joins.json');
+var supportedCollectionsMetadata = require('../resources/collections_metadata.json');
 
 const useStyles = makeStyles({
     root: {
@@ -21,38 +23,23 @@ const useStyles = makeStyles({
     },
     tableHeader: {
         fontWeight: "bold"
+    },
+    scrollable: {
+        maxHeight: 285,
+        overflow: "auto"
     }
 });
 
 export default function Main() {
     const classes = useStyles();
 
-    const timePeriods = ["year", "month", "day", "hour"];
-    const timeSteps = ["0", "3", "6"];
     const [selectedState, setSelectedState] = useState(null);
     const [selectedCounty, setSelectedCounty] = useState(null);
-    const [timePeriod, setTimePeriod] = useState(timePeriods[0]);
-    const [timeStep, setTimeStep] = useState(timeSteps[0]);
-    const [selectedField, setSelectedField] = useState(null); //FIXME hard-coded for now
+    const [selectedReturnPeriod, setSelectedReturnPeriod] = useState(null);
+    const [selectedTimestep, setSelectedTimestep] = useState(0);
+    const [selectedField, setSelectedField] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [gisJoin, setGisJoin] = useState(null);
-    const [open, setOpen] = useState(false);
-
-    const supportedCollectionsMetadata = {
-        "NOAA NAM": {
-            name: "NOAA NAM",
-            collection: "noaa_nam",
-            supportedFields: {
-                "Temperature at Surface": {
-                    name: "Temperature at Surface",
-                    field: "TEMPERATURE_AT_SURFACE_KELVIN",
-                    unit: "Kelvin",
-                    type: "Floating-point",
-                    isAccumulationBased: "true"
-                }
-            }
-        }
-    };
 
     function handleSelectStateChange(value) {
         console.log("Selected State changed to", value);
@@ -81,6 +68,10 @@ export default function Main() {
         console.log("Selected Collection by name", value);
         if (selectedCollection) {
             if (value in selectedCollection["supportedFields"]) {
+                let fieldObj = selectedCollection["supportedFields"][value];
+                if (fieldObj["accumulationOrInstant"] === "Instant") {
+                    setSelectedTimestep(0);
+                }
                 setSelectedField(selectedCollection["supportedFields"][value]);
             }
         }
@@ -178,44 +169,122 @@ export default function Main() {
             let rows = [];
             let fields = selectedCollection["supportedFields"];
             for (let key in fields) {
-                console.log(key);
                 let value = fields[key];
                 rows.push(value);
             }
 
-            console.log(rows);
-
             return (
                 <Grid item xs={10} md={10}>
+                    <div className={classes.scrollable}>                 
                     <TableContainer>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <Table aria-label="a dense table">
                             <TableHead>
                                 <TableRow>
                                     <TableCell className={classes.tableHeader}>Field</TableCell>
                                     <TableCell className={classes.tableHeader} align="right">Unit</TableCell>
                                     <TableCell className={classes.tableHeader} align="right">Data Type</TableCell>
-                                    <TableCell className={classes.tableHeader} align="right">Accumulation-based</TableCell>
+                                    <TableCell className={classes.tableHeader} align="right">Instant/Accumulation</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {rows.map((row) => 
                                     <TableRow
-                                        key={row.name}
+                                        key={"key_"+row.name}
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">{row.name}</TableCell>
                                         <TableCell align="right">{row.unit}</TableCell>
                                         <TableCell align="right">{row.type}</TableCell>
-                                        <TableCell align="right">{row.isAccumulationBased}</TableCell>
+                                        <TableCell align="right">{row.accumulationOrInstant}</TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    </div>
                 </Grid>
             );
         }
         return null;
+    }
+
+    function getTimestepRadios() {
+        if (selectedCollection && selectedCollection.name === "NOAA NAM") {
+            if (selectedField && selectedField.accumulationOrInstant === "Accumulation") {
+                let timesteps = [3,6];
+                return (
+                    <Grid item xs={10} md={10}>
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">Timestep (Accumulation Period)</FormLabel>
+                            <RadioGroup row aria-label="timestep" name="row-radio-buttons-group">
+                                {timesteps.map((timestep) => 
+                                    <FormControlLabel
+                                        value={timestep}
+                                        label={`${timestep} hours`}
+                                        key={"timestep_formcontrol_key_"+timestep}
+                                        control={<Radio 
+                                            color="primary"
+                                            key={"timestep_radio_key_"+timestep}
+                                            checked={selectedTimestep === timestep}
+                                            onClick={() => setSelectedTimestep(timestep)}
+                                        />}
+                                    />
+                                )}
+                            </RadioGroup>
+                        </FormControl>
+                    </Grid>
+                );
+            }
+        }
+        return null;
+    }
+
+    function getReturnPeriodRadios() {
+        if (selectedCollection && selectedCollection.name === "NOAA NAM") {
+            if (selectedField) {
+                let returnPeriods = ["year", "month", "day", "hour"];
+                return (
+                    <Grid item xs={10} md={10}>
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">Return Period</FormLabel>
+                            <RadioGroup row aria-label="returnperiods" name="row-radio-buttons-group">
+                                {returnPeriods.map((returnPeriod) => 
+                                    <FormControlLabel
+                                        value={returnPeriod}
+                                        label={returnPeriod}
+                                        key={"returnperiod_formcontrol_key_"+returnPeriod}
+                                        control={<Radio 
+                                            color="primary"
+                                            key={"returnperiod_radio_key_"+returnPeriod}
+                                            checked={selectedReturnPeriod === returnPeriod}
+                                            onClick={() => setSelectedReturnPeriod(returnPeriod)}
+                                        />}
+                                    />
+                                )}
+                            </RadioGroup>
+                        </FormControl>
+                    </Grid>
+                );
+            }
+        }
+        return null;
+    }
+
+    function getSubmitButton() {
+        let enabled = false;
+        if (selectedState && selectedCollection && selectedField && selectedReturnPeriod) {
+            if (selectedField["accumulationOrInstant"] === "Accumulation") {
+                enabled = selectedTimestep === 6 || selectedTimestep === 3;
+            } else {
+                enabled = selectedTimestep === 0;
+            }
+        }
+
+        return (
+            <Grid item xs={10} md={10}>
+                <Button disabled={!enabled} variant="outlined" onClick={handleSubmit}>Submit</Button>
+            </Grid>
+        );
     }
 
     function findGisJoin() {
@@ -229,19 +298,6 @@ export default function Main() {
         }
         console.error("Selected State cannot be empty!");
     }
-
-    return (
-        <Paper elevation={3} className={classes.root}>
-            <Grid container spacing={2} direction="row">
-                {getStateInput()}
-                {getCountyInput()}
-                {getCollectionInput()}
-                {getCollectionFieldInput()}
-                {getCollectionFieldsInfo()}
-            </Grid>
-        </Paper>
-    );
-
 
     function handleSubmit() {
         findGisJoin();
@@ -265,5 +321,19 @@ export default function Main() {
         }
         */
     }
-    
+
+    return (
+        <Paper elevation={3} className={classes.root}>
+            <Grid container spacing={2} direction="row">
+                {getStateInput()}
+                {getCountyInput()}
+                {getCollectionInput()}
+                {getCollectionFieldInput()}
+                {getTimestepRadios()}
+                {getReturnPeriodRadios()}
+                {getSubmitButton()}
+                {getCollectionFieldsInfo()}
+            </Grid>
+        </Paper>
+    );
 }

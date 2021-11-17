@@ -29,8 +29,5 @@ export default function CustomRadios(props) {
     );
 
     function getRadios() {
-        return props.options.map((option, index) => {
-            return <FormControlLabel key={index} value={option} control={<Radio color="primary" checked={props.access === option} onClick={() => props.set(option)} />} label={option} />
-        })
     }
 }
