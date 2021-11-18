@@ -2,11 +2,8 @@ import React, {useState} from 'react';
 import {Button, TextField, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer,
     FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, TableHead, TableRow} from "@material-ui/core";
 import { Autocomplete } from '@material-ui/lab';
-import CustomAutocomplete from "./CustomAutocomplete";
-import {stateArray, countyMap} from "../utils/StateCountyMapping";
-import {sendServerRequestWithBody} from "../utils/requests"
-import CustomRadios from "./CustomRadios";
-import Response from "./Response";
+import {sendServerRequestWithBody} from "../api/requests";
+import Results from './Results';
 
 var gisJoinJson = require('../resources/gis_joins.json');
 var supportedCollectionsMetadata = require('../resources/collections_metadata.json');
@@ -323,17 +320,21 @@ export default function Main() {
     }
 
     return (
-        <Paper elevation={3} className={classes.root}>
-            <Grid container spacing={2} direction="row">
-                {getStateInput()}
-                {getCountyInput()}
-                {getCollectionInput()}
-                {getCollectionFieldInput()}
-                {getTimestepRadios()}
-                {getReturnPeriodRadios()}
-                {getSubmitButton()}
-                {getCollectionFieldsInfo()}
-            </Grid>
-        </Paper>
+        <div>
+            <Paper elevation={3} className={classes.root}>
+                <Grid container spacing={2} direction="row">
+                    {getStateInput()}
+                    {getCountyInput()}
+                    {getCollectionInput()}
+                    {getCollectionFieldInput()}
+                    {getTimestepRadios()}
+                    {getReturnPeriodRadios()}
+                    {getSubmitButton()}
+                    {getCollectionFieldsInfo()}
+                </Grid>
+                
+            </Paper>
+            <Results></Results>
+        </div>
     );
 }
