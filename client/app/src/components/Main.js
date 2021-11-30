@@ -9,6 +9,7 @@ import Results from './Results';
 
 var gisJoinJson = require('../resources/gis_joins.json');
 var supportedCollectionsMetadata = require('../resources/collections_metadata.json');
+var exampleResponse = require('../resources/example_response.json.json');
 
 const useStyles = makeStyles({
     wipBanner: {
@@ -330,7 +331,7 @@ export default function Main() {
 
         if (gisJoin !== "") {
             let requestBody = {
-                "collection": selectedCollection,
+                "collection": selectedCollection["collection"],
                 "field": selectedField,
                 "gisJoin": gisJoin,
                 "period": selectedReturnPeriod,
@@ -338,10 +339,14 @@ export default function Main() {
             };
             setCurrentRequest(requestBody);
 
+            /*
             sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody)
             .then(response => {
                 console.log(response);
             });
+             */
+
+            setCurrentResponse(exampleResponse);
         } else {
             console.log("gisJoin is empty");
         }
@@ -363,7 +368,7 @@ export default function Main() {
                     {getCollectionDescription()}
                 </Grid>
             </Paper>
-            <Results></Results>
+            <Results response={currentResponse}/>
         </div>
     );
 }

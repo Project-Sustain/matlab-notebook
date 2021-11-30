@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import * as d3 from 'd3';
 
-export default function Results() {
+export default function Results(props) {
 
     var svgRef = React.createRef();
 
-    var data = [[12, 200], [20, 320], [66, 145], [53, 80], [24, 99], [80, 19], [10, 243], [33, 301], [100, 15]];
     var margin = 20;
     var svgWidth = 700,
         svgHeight = 500;
@@ -46,7 +45,7 @@ export default function Results() {
             .text(title);
     }
 
-    function setupYAxis(svg, title) {
+    function setupYAxis(svg, title, data) {
         // Find max of data array's y-points
         yAxisConfig.maxValue = d3.max(data, function (d) {
             return d[1];
@@ -133,15 +132,24 @@ export default function Results() {
     };
 
     let rerender = () => {
+        let returnLevelConfidenceInterval50 = props.response["returnLevelConfidenceInterval50"];
+        let returnLevelConfidenceInterval05 = props.response["returnLevelConfidenceInterval05"];
+        let returnLevelConfidenceInterval95 = props.response["returnLevelConfidenceInterval95"];
+        let median = props.response["median"];
+        let observations = props.response["observations"];
+
         let svg = d3.select(svgRef.current);
         svg.attr("width", svgWidth);
         svg.attr("height", svgHeight);
         setupXAxis(svg, "Return Period");
-        setupYAxis(svg, "Return Level");
-        plotScatterPlot(svg, data);
+        setupYAxis(svg, "Return Level", observations);
 
-        var fakeLinePoints = [[0, 0], [50, 50], [75,100], [80, 150], [90, 250]];
-        plotSolidLine(svg, fakeLinePoints);
+        // var data = [[12, 200], [20, 320], [66, 145], [53, 80], [24, 99], [80, 19], [10, 243], [33, 301], [100, 15]];
+        // var fakeLinePoints = [[0, 0], [50, 50], [75,100], [80, 150], [90, 250]];
+        // plotScatterPlot(svg, data);
+        // plotSolidLine(svg, fakeLinePoints);
+
+        plotScatterPlot(svg, observations);
     }
 
     useEffect(setup);
