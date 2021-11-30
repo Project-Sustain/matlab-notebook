@@ -86,7 +86,14 @@ public class MongoQuery {
     }
 
     public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Long> periodBoundaries) {
-        log.info("Executing MongoDB query to find block extrema");
+        log.info("Executing MongoDB query to find block extrema for buckets: {} and field: {}", periodBoundaries, field);
+
+
+        FindIterable<Document> testResults = collection.find(Filters.eq("GISJOIN", gisJoin)).limit(1);
+        for (Document document: testResults) {
+            log.info(document.toJson());
+        }
+
         AggregateIterable<Document> results = collection.aggregate(
                 Arrays.asList(
                         Aggregates.match(Filters.and(

@@ -1,7 +1,7 @@
 {
   "collection": "noaa_nam",
-  "field": "TEMPERATURE_AT_SURFACE_KELVIN",
+  "field": "TEMPERATURE_TROPOPAUSE_KELVIN",
   "gisJoin": "G4100470",
-  "period": "day",
-  "timestep": 3
+  "period": "month",
+  "timestep": 0
 }
