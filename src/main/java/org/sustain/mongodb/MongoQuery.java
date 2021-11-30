@@ -49,8 +49,8 @@ public class MongoQuery {
      */
     public List<Long> getMinAndMaxDates(String gisJoin) {
 
-        log.info("Using precomputed min date of 202001010000 and max date of 202110230600");
-        return new ArrayList<>(List.of(202101010000L, 202110230000L));
+        log.info("Using precomputed min date of 202001010000 and max date of 202110010000");
+        return new ArrayList<>(List.of(202101010000L, 202110010000L));
 
         /*
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
@@ -104,6 +104,7 @@ public class MongoQuery {
                                 "$YYYYMMDDHHHH",
                                 periodBoundaries,
                                 new BucketOptions()
+                                        .defaultBucket(202111010000L)
                                         .output(
                                                 Accumulators.max("max_"+field, "$"+field)
                                         )
