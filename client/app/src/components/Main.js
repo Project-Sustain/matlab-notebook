@@ -44,7 +44,6 @@ export default function Main() {
     const [selectedTimestep, setSelectedTimestep] = useState(0);
     const [selectedField, setSelectedField] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
-    const [gisJoin, setGisJoin] = useState(null);
     const [currentRequest, setCurrentRequest] = useState(null);
     const [currentResponse, setCurrentResponse] = useState(null);
 
@@ -53,7 +52,6 @@ export default function Main() {
             console.log("Selected State changed to", gisJoinJson["states"][value]);
             setSelectedState(gisJoinJson["states"][value]);
             setSelectedCounty(null);
-            setGisJoin(findGisJoin());
         }
     }
 
@@ -62,7 +60,6 @@ export default function Main() {
             if (value in selectedState["counties"]) {
                 console.log("Selected County changed to", selectedState["counties"][value]);
                 setSelectedCounty(selectedState["counties"][value]);
-                setGisJoin(findGisJoin());
             }
         }
     }
@@ -329,7 +326,7 @@ export default function Main() {
     }
 
     function handleSubmit() {
-        findGisJoin();
+        let gisJoin = findGisJoin();
 
         if (gisJoin !== "") {
             let requestBody = {
