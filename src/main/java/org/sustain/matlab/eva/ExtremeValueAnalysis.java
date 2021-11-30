@@ -51,6 +51,22 @@ public class ExtremeValueAnalysis {
         return new EvaResponse(request.collection, request.field, results);
     }
 
+    public static EvaResponse exampleEvaRequest(MatlabEngine engine) {
+        List<Double> blockExtrema = new ArrayList<Double>(List.of(
+                17.46,17.68,17.76,18.14,17.73,17.48,17.58,17.68,17.34,17.33,17.53,17.52,17.27,17.68,17.96,
+                17.35,17.82,18.10,17.09,17.06,18.02,18.37,17.13,17.26,17.55,17.25,18.28,18.52,18.43,17.76,
+                18.68,18.22,17.85,17.04,18.22,17.97,17.62,17.62,18.68,19.00,18.51,18.69,18.44,18.39,18.12,
+                18.61,19.12,18.69,18.03,17.87,18.14,18.42,19.83,17.86,17.97,18.93,19.27
+        ));
+        log.info("Block Extrema: {}", blockExtrema);
+        EvaResults results = EvaLauncher.launchExtremeValueAnalysis(
+                engine,
+                blockExtrema.stream().mapToDouble(Double::doubleValue).toArray()
+        );
+        log.info("EVA Results: {}", results);
+        return new EvaResponse("example_collection", "example_field", results);
+    }
+
     /**
      * Creates bucket boundaries for the period blocks used to get extrema. One extreme value is retrieved from
      * each of the blocks in the period.

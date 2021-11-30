@@ -5,7 +5,6 @@ import com.mathworks.engine.MatlabEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,6 +69,13 @@ public class RestfulApiController implements InitializingBean  {
     public EvaResponse extremeValueAnalysisRequest(@RequestBody EvaRequest request) {
         log.info("Extreme Value Analysis Request: {}", request);
         return ExtremeValueAnalysis.extremeValueAnalysisRequest(request, engine);
+    }
+
+    @PostMapping("/eva/example")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public EvaResponse extremeValueAnalysisExampleRequest() {
+        log.info("Extreme Value Analysis Request for default example (US_Temp.txt)");
+        return ExtremeValueAnalysis.exampleEvaRequest(engine);
     }
 
 }
