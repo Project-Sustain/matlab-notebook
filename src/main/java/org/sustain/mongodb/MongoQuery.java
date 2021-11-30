@@ -43,19 +43,24 @@ public class MongoQuery {
 
     /**
      * Retrieves the oldest date in the collection, and the most recent date in the collection.
-     * The date is represented as an integer YYYYMMDDHH, i.e.:
-     * 2010020400 would be year 2010, month 02 (February), day 04, and hour 00.
+     * The date is represented as an integer YYYYMMDDHHHH, i.e.:
+     * 201002040000 would be year 2010, month 02 (February), day 04, and hour 0000.
      * @return min and max dates
      */
     public List<Long> getMinAndMaxDates(String gisJoin) {
+
+        log.info("Using precomputed min date of 202001010000 and max date of 202110230600");
+        return new ArrayList<>(List.of(202001010000L, 202110230600L));
+
+        /*
         log.info("Getting min and max dates for {}.{}", this.databaseName, this.collectionName);
         AggregateIterable<Document> results = this.collection.aggregate(
                 List.of(
                         Aggregates.match(Filters.eq("GISJOIN", gisJoin)),
                         Aggregates.group(
                                 null,
-                                Accumulators.max("max", "$YYYYMMDDHH"),
-                                Accumulators.min("min", "$YYYYMMDDHH")
+                                Accumulators.max("max", "$YYYYMMDDHHHH"),
+                                Accumulators.min("min", "$YYYYMMDDHHHH")
                         )
                 )
         );
@@ -76,6 +81,8 @@ public class MongoQuery {
         }
         log.error("Unable to find min and max dates!");
         return null;
+
+         */
     }
 
     public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Long> periodBoundaries) {
@@ -87,14 +94,13 @@ public class MongoQuery {
                                 Filters.eq("TIMESTEP", timestep)
                         )),
                         Aggregates.bucket(
-                                "$YYYYMMDDHH",
+                                "$YYYYMMDDHHHH",
                                 periodBoundaries,
                                 new BucketOptions()
                                         .output(
                                                 Accumulators.max("max_"+field, "$"+field)
                                         )
                         )
-
                 )
         );
 

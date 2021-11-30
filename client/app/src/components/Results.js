@@ -5,139 +5,143 @@ export default function Results() {
 
     var svgRef = React.createRef();
 
-    // var margin = {
-    //     top: 20,
-    //     right: 20,
-    //     bottom: 30,
-    //     left: 40
-    // }
+    var data = [[12, 200], [20, 320], [66, 145], [53, 80], [24, 99], [80, 19], [10, 243], [33, 301], [100, 15]];
     var margin = 20;
-    var width = 700,
-        height = 500;
+    var svgWidth = 700,
+        svgHeight = 500;
 
-    function getXAxis(width) {
-        // Create linear scale
-        var scale = d3.scaleLinear()
-            .domain([0, 100])
-            .range([10, width-100]);
+    let xAxisConfig = {
+        minValue: 0,
+        maxValue: 100,
+        rightShift: 70,
+        downShift: svgHeight/2 + 10,
+        linearScale: null
+    };
 
-        // Add scales to axis
-        return d3.axisBottom().scale(scale);
+    let yAxisConfig = {
+        minValue: 0,
+        maxValue: 100,
+        rightShift: 70,
+        downShift: 10,
+        linearScale: null
+    };
+
+    function setupXAxis(svg, title) {
+        // Create Linear Scale
+        xAxisConfig.linearScale = d3.scaleLinear()
+            .domain([xAxisConfig.minValue, xAxisConfig.maxValue])
+            .range([0, svgWidth-100]);
+
+        // Create X-Axis and scale it to the Linear Scale
+        let xAxis = d3.axisBottom().scale(xAxisConfig.linearScale);
+
+        // Add X-Axis to SVG
+        svg.select("g#xAxis")
+            .attr("transform", `translate(${xAxisConfig.rightShift},${xAxisConfig.downShift})`)
+            .call(xAxis);
+
+        // Add label to X-Axis
+        svg.select("text#xAxisLabel")
+            .attr("transform", `translate(${svgWidth/2 - 50},${xAxisConfig.downShift + 50})`)
+            .text(title);
     }
 
-    function getYAxis(height) {
-        // Create linear scale
-        var scale = d3.scaleLinear()
-            .domain([0, 100])
-            .range([height/2, 0]);
+    function setupYAxis(svg, title) {
+        // Find max of data array's y-points
+        yAxisConfig.maxValue = d3.max(data, function (d) {
+            return d[1];
+        });
 
-        // Add scales to axis
-        return d3.axisLeft().scale(scale);
+        // Create Linear Scale
+        yAxisConfig.linearScale = d3.scaleLinear()
+            .domain([yAxisConfig.minValue, yAxisConfig.maxValue])
+            .range([svgHeight/2, 0]);
+
+        // Create Y-Axis and scale it to the Linear Scale
+        let yAxis = d3.axisLeft().scale(yAxisConfig.linearScale);
+
+        // Add Y-Axis to SVG
+        svg.select("g#yAxis")
+            .attr("transform", `translate(${yAxisConfig.rightShift},${yAxisConfig.downShift})`)
+            .call(yAxis);
+
+        // Add label to Y-Axis
+        svg.select("text#yAxisLabel")
+            .attr("transform", `translate(${20},${svgHeight/2-100}) rotate(-90)`)
+            .text(title);
     }
 
+    function plotScatterPlot(svg, points) {
+        svg.selectAll("dot")
+            .data(points)
+            .enter().append("circle")
+            .attr("r", 2)
+            .attr("cx", function (d) {
+                return xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift;
+            })
+            .attr("cy", function (d) {
+                return yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift;
+            })
+            .attr("stroke", "#3646f5")
+            .attr("stroke-width", 1.5)
+            .attr("fill", "#FFFFFF");
+    }
+
+    /**
+     * Plots a solid line on the SVG element by connecting the points given.
+     * @param svg Reference to our SVG element
+     * @param points Array of points; must be an array in the form [ [x1,y1], [x2,y2], ..., [xn, yn] ]
+     */
+    function plotSolidLine(svg, points) {
+
+        let line = d3.line()
+            .x(d => xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift)
+            .y(d => yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift);
+
+        // Make a d3 line:
+        // let valueline = d3.line()
+        //     .x(function (d) {
+        //         return (d[0]) + xAxisConfig.rightShift;
+        //     })
+        //     .y(function (d) {
+        //         return yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift;
+        //     });
+
+        svg.select("g#lines")
+            .selectAll("path")
+            .data([points])
+            .join("path")
+            .attr("d", d => line(d))
+            .attr("stroke", "#3646f5")
+            .attr("stroke-width", 1.5)
+            .attr("fill", "#FFFFFF");
+    }
+
+    /**
+     * Adds blank default "g" elements to the SVG so that we can reuse them by
+     * selecting them by their ids at a later time, during rerender().
+     */
     let setup = () => {
         let svg = d3.select(svgRef.current);
-        svg.attr("width", width);
-        svg.attr("height", height);
-
-        var xAxisTranslate = height/2 + 10;
-        svg.append("g")
-            .attr("transform", "translate(50, " + xAxisTranslate  +")")
-            .call(getXAxis(width));
-
-        svg.append("g")
-            .attr("transform", "translate(50, 10)")
-            .call(getYAxis(height));
-
-        // svg.append("g").attr("id", "xAxis");
-        // svg.append("g").attr("id", "yAxis");
-		// svg.append("g").attr("id", "lines")
-        //     .attr("fill", "none")
-        //     .attr("stroke", "steelblue")
-        //     .attr("stroke-width", 1.5)
-        //     .attr("stroke-linejoin", "round")
-        //     .attr("stroke-linecap", "round");
-        // svg.append("text").attr("id", "marker");
-        // svg.append("text").attr("id", "xAxisLabel")
-        //     .text("X AXIS");
-        // svg.append("text").attr("id", "yAxisLabel")
-        //     .text("Y AXIS");  
+        svg.append("g").attr("id", "xAxis");
+        svg.append("g").attr("id", "yAxis");
+        svg.append("g").attr("id", "scatterPlot");
+        svg.append("g").attr("id", "lines");
+        svg.append("text").attr("id", "marker");
+        svg.append("text").attr("id", "xAxisLabel")
+        svg.append("text").attr("id", "yAxisLabel")
     };
 
     let rerender = () => {
-        // var data = [[90, 20], [20, 100], [66, 44], [53, 80], [24, 182], [80, 72], [10, 76], [33, 150], [100, 15]];
+        let svg = d3.select(svgRef.current);
+        svg.attr("width", svgWidth);
+        svg.attr("height", svgHeight);
+        setupXAxis(svg, "Return Period");
+        setupYAxis(svg, "Return Level");
+        plotScatterPlot(svg, data);
 
-        // let svg = d3.select(svgRef.current);
-        // let height = svg.attr("height") - margin;
-        // let width = svg.attr("width") - margin;
-        //svg.attr("viewBox", [0, 0, 2000, 1200]);
-
-        // var xScale = d3.scaleLinear().domain([0, 100]).range([0, width]),
-        //     yScale = d3.scaleLinear().domain([0, 200]).range([height, 0]);
-
-        //var x = d3.scaleLinear().range([0, width]);
-        //var y = d3.scaleLinear().range([height, 0]);
-
-        // Scale the range of the data
-        // x.domain(d3.extent(data, function (d) {
-        //     return d[0];
-        // }));
-        // y.domain([0, d3.max(data, function (d) {
-        //     return d[1];
-        // })]);
-
-        // let xAxis = g => g
-        //     .attr("transform", `translate(0,${height - margin.bottom})`)
-        //     .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
-
-        // let yAxis = g => g
-        //     .attr("transform", `translate(${margin.left}, 0)`)
-        //     .call(d3.axisLeft(y).ticks(height / 40))
-
-        // Title
-        // svg.append('text')
-        //     .attr('x', width/2 + 100)
-        //     .attr('y', 100)
-        //     .attr('text-anchor', 'middle')
-        //     .style('font-family', 'Helvetica')
-        //     .style('font-size', 20)
-        //     .text('Scatter Plot');
-        
-        // X label
-        // svg.append('text')
-        //     .attr('x', width/2 + 100)
-        //     .attr('y', height - 15 + 150)
-        //     .attr('text-anchor', 'middle')
-        //     .style('font-family', 'Helvetica')
-        //     .style('font-size', 12)
-        //     .text('Independent');
-        
-        // Y label
-        // svg.append('text')
-        //     .attr('text-anchor', 'middle')
-        //     .attr('transform', 'translate(60,' + height + ')rotate(-90)')
-        //     .style('font-family', 'Helvetica')
-        //     .style('font-size', 12)
-        //     .text('Dependent');
-
-        // svg.append('g')
-        //     .selectAll("dot")
-        //     .data(data)
-        //     .enter()
-        //     .append("circle")
-        //     .attr("cx", function (d) { return xScale(d[0]); } )
-        //     .attr("cy", function (d) { return yScale(d[1]); } )
-        //     .attr("r", 2)
-        //     .attr("transform", "translate(" + 100 + "," + 100 + ")")
-        //     .style("fill", "#CC0000");
-
-        // svg.append("g")
-        //     .attr("transform", "translate(0," + height + ")")
-        //     .call(d3.axisBottom(xScale));
-           
-        // svg.append("g")
-        //     .call(d3.axisLeft(yScale));
-
+        var fakeLinePoints = [[0, 0], [50, 50], [75,100], [80, 150], [90, 250]];
+        plotSolidLine(svg, fakeLinePoints);
     }
 
     useEffect(setup);
@@ -145,7 +149,7 @@ export default function Results() {
 
     return (
         <div>
-            <svg ref={svgRef}></svg>
+            <svg ref={svgRef}/>
         </div>
     );
 }

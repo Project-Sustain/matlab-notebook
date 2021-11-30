@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
-import {Button, TextField, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer,
-    FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, TableHead, TableRow} from "@material-ui/core";
+import {
+    Button, TextField, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer,
+    FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, TableHead, TableRow, Typography
+} from "@material-ui/core";
 import { Autocomplete } from '@material-ui/lab';
 import {sendServerRequestWithBody} from "../api/requests";
 import Results from './Results';
@@ -9,14 +11,20 @@ var gisJoinJson = require('../resources/gis_joins.json');
 var supportedCollectionsMetadata = require('../resources/collections_metadata.json');
 
 const useStyles = makeStyles({
+    wipBanner: {
+        width: "auto",
+        margin: "20px",
+        padding: "20px",
+        backgroundColor: "#f7dd86"
+    },
     root: {
-        width: "60vw",
+        width: "auto",
         margin: "20px",
         padding: "20px",
     },
     autocomplete: {
-        width: "45%",
-        margin: "10px"
+        width: "50%",
+        margin: "auto"
     },
     tableHeader: {
         fontWeight: "bold"
@@ -93,71 +101,64 @@ export default function Main() {
     }
 
     function getCountyInput() {
-        if (selectedState) {
-            return (
-                <Grid item xs={6} md={6}>
-                    <Autocomplete
-                        className={classes.autocomplete}
-                        autoHighlight
-                        options={selectedState ? Object.keys(selectedState["counties"]) : []}
-                        value={selectedCounty ? selectedCounty.name : ''}
-                        onChange={(event, value) => {
-                            if (value) {
-                                handleSelectCountyChange(value);
-                            }
-                        }}
-                        renderInput={(params) => <TextField variant="outlined" {...params} label={"County"} />}
-                    />
-                </Grid>
-            );
-        }
-        return null;
+        return (
+            <Grid item xs={6} md={6}>
+                <Autocomplete
+                    className={classes.autocomplete}
+                    autoHighlight
+                    options={selectedState ? Object.keys(selectedState["counties"]) : []}
+                    value={selectedCounty ? selectedCounty.name : ''}
+                    onChange={(event, value) => {
+                        if (value) {
+                            handleSelectCountyChange(value);
+                        }
+                    }}
+                    disabled={!selectedState}
+                    renderInput={(params) => <TextField variant="outlined" {...params} label={"County"} />}
+                />
+            </Grid>
+        );
     }
 
     function getCollectionInput() {
-        if (selectedState) {
-            return (
-                <Grid item xs={6} md={6}>
-                    <Autocomplete
-                        className={classes.autocomplete}
-                        autoHighlight
-                        options={Object.keys(supportedCollectionsMetadata)}
-                        defaultValue={Object.keys(supportedCollectionsMetadata)[0]}
-                        value={selectedCollection ? selectedCollection.name : ''}
-                        onChange={(event, value) => {
-                            if (value) {
-                                handleSelectCollectionChange(value);
-                            }
-                        }}
-                        renderInput={(params) => <TextField variant="outlined" required {...params} label={"Collections"} />}
-                    />
-                </Grid>
-            );
-        }
-        return null;
+        return (
+            <Grid item xs={6} md={6}>
+                <Autocomplete
+                    className={classes.autocomplete}
+                    autoHighlight
+                    options={Object.keys(supportedCollectionsMetadata)}
+                    defaultValue={Object.keys(supportedCollectionsMetadata)[0]}
+                    value={selectedCollection ? selectedCollection.name : ''}
+                    onChange={(event, value) => {
+                        if (value) {
+                            handleSelectCollectionChange(value);
+                        }
+                    }}
+                    renderInput={(params) => <TextField variant="outlined" required {...params} label={"Collections"} />}
+                />
+            </Grid>
+        );
     }
 
     function getCollectionFieldInput() {
-        if (selectedCollection) {
-            return (
-                <Grid item xs={6} md={6}>
-                    <Autocomplete
-                        className={classes.autocomplete}
-                        autoHighlight
-                        options={Object.keys(selectedCollection["supportedFields"])}
-                        defaultValue={Object.keys(selectedCollection["supportedFields"])[0]}
-                        value={selectedField ? selectedField.name : ''}
-                        onChange={(event, value) => {
-                            if (value) {
-                                handleSelectFieldChange(value);
-                            }
-                        }}
-                        renderInput={(params) => <TextField variant="outlined" required {...params} label={"Field"} />}
-                    />
-                </Grid>
-            );
-        }
-        return null;
+        return (
+            <Grid item xs={6} md={6}>
+                <Autocomplete
+                    className={classes.autocomplete}
+                    autoHighlight
+                    options={selectedCollection ? Object.keys(selectedCollection["supportedFields"]) : []}
+                    defaultValue={selectedCollection ? Object.keys(selectedCollection["supportedFields"])[0] : ''}
+                    value={selectedField ? selectedField.name : ''}
+                    onChange={(event, value) => {
+                        if (value) {
+                            handleSelectFieldChange(value);
+                        }
+                    }}
+                    disabled={!selectedCollection}
+                    renderInput={(params) => <TextField variant="outlined" required {...params} label={"Field"} />}
+                />
+            </Grid>
+        );
     }
 
     function getCollectionFieldsInfo() {
@@ -171,7 +172,7 @@ export default function Main() {
             }
 
             return (
-                <Grid item xs={10} md={10}>
+                <Grid item xs={8} md={8}>
                     <div className={classes.scrollable}>                 
                     <TableContainer>
                         <Table aria-label="a dense table">
@@ -199,6 +200,21 @@ export default function Main() {
                         </Table>
                     </TableContainer>
                     </div>
+                </Grid>
+            );
+        }
+        return null;
+    }
+
+    function getCollectionDescription() {
+        if (selectedCollection) {
+            return (
+                <Grid item xs={4} md={4}>
+                    <Typography variant="h5">Dataset Description</Typography>
+                    <Typography align="left">
+                        From <a href={selectedCollection["descriptionSource"]}>{selectedCollection["longName"]}</a>:
+                        <em>{selectedCollection["description"]}</em>
+                    </Typography>
                 </Grid>
             );
         }
@@ -241,7 +257,7 @@ export default function Main() {
             if (selectedField) {
                 let returnPeriods = ["year", "month", "day", "hour"];
                 return (
-                    <Grid item xs={10} md={10}>
+                    <Grid item xs={4} md={6}>
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Return Period</FormLabel>
                             <RadioGroup row aria-label="returnperiods" name="row-radio-buttons-group">
@@ -284,6 +300,14 @@ export default function Main() {
         );
     }
 
+    function getWorkInProgressBanner() {
+        return (
+            <Paper elevation={3} className={classes.wipBanner}>
+                Site/Service currently in-progress. <em>Coming soon</em>: Support for more datasets, user-defined models
+            </Paper>
+        );
+    }
+
     function findGisJoin() {
         if (selectedState) {
             if (selectedCounty) {
@@ -321,8 +345,9 @@ export default function Main() {
 
     return (
         <div>
+            {getWorkInProgressBanner()}
             <Paper elevation={3} className={classes.root}>
-                <Grid container spacing={2} direction="row">
+                <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                     {getStateInput()}
                     {getCountyInput()}
                     {getCollectionInput()}
@@ -331,8 +356,8 @@ export default function Main() {
                     {getReturnPeriodRadios()}
                     {getSubmitButton()}
                     {getCollectionFieldsInfo()}
+                    {getCollectionDescription()}
                 </Grid>
-                
             </Paper>
             <Results></Results>
         </div>

@@ -1,7 +1,11 @@
 {
     "NOAA NAM": {
         "name": "NOAA NAM",
+        "longName": "National Center for Environmental Information",
         "collection": "noaa_nam",
+        "dataSource": "https://www.ncei.noaa.gov/products/weather-climate-models/north-american-mesoscale",
+        "descriptionSource": "https://www.ncei.noaa.gov/products/weather-climate-models/north-american-mesoscale",
+        "description": "The North American Mesoscale Forecast System (NAM) is one of the National Centers For Environmental Prediction’s (NCEP) major models for producing weather forecasts. NAM generates multiple grids (or domains) of weather forecasts over the North American continent at various horizontal resolutions. Each grid contains data for dozens of weather parameters, including temperature, precipitation, lightning, and turbulent kinetic energy. NAM uses additional numerical weather models to generate high-resolution forecasts over fixed regions, and occasionally to follow significant weather events like hurricanes.",
         "supportedFields": {
             "Pressure (Reduced to Mean Sea Level)": {
                 "name": "Pressure (Reduced to Mean Sea Level)",
