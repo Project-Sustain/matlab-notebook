@@ -49,17 +49,20 @@ export default function Main() {
     const [currentResponse, setCurrentResponse] = useState(null);
 
     function handleSelectStateChange(value) {
-        console.log("Selected State changed to", value);
         if (value in gisJoinJson["states"]) {
+            console.log("Selected State changed to", gisJoinJson["states"][value]);
             setSelectedState(gisJoinJson["states"][value]);
+            setSelectedCounty(null);
+            setGisJoin(findGisJoin());
         }
     }
 
     function handleSelectCountyChange(value) {
-        console.log("Selected County changed to", value);
         if (selectedState) {
             if (value in selectedState["counties"]) {
+                console.log("Selected County changed to", selectedState["counties"][value]);
                 setSelectedCounty(selectedState["counties"][value]);
+                setGisJoin(findGisJoin());
             }
         }
     }
@@ -313,13 +316,16 @@ export default function Main() {
     function findGisJoin() {
         if (selectedState) {
             if (selectedCounty) {
-                setGisJoin(selectedCounty["GISJOIN"]);
+                console.log("County GISJOIN:", selectedCounty["GISJOIN"]);
+                return selectedCounty["GISJOIN"];
             } else {
-                setGisJoin(selectedState["GISJOIN"]);
+                console.log("State GISJOIN:", selectedState["GISJOIN"]);
+                return selectedState["GISJOIN"];
             }
-            console.log("Updated GISJOIN to", gisJoin)
+        } else {
+            console.error("Selected State cannot be empty!");
+            return null;
         }
-        console.error("Selected State cannot be empty!");
     }
 
     function handleSubmit() {
