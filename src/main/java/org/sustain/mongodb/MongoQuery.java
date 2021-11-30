@@ -104,6 +104,7 @@ public class MongoQuery {
                                 "$YYYYMMDDHHHH",
                                 periodBoundaries,
                                 new BucketOptions()
+                                        .defaultBucket(202111010000L)
                                         .output(
                                                 Accumulators.max("max_"+field, "$"+field)
                                         )
