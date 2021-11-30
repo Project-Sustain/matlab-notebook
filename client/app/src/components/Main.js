@@ -45,6 +45,8 @@ export default function Main() {
     const [selectedField, setSelectedField] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [gisJoin, setGisJoin] = useState(null);
+    const [currentRequest, setCurrentRequest] = useState(null);
+    const [currentResponse, setCurrentResponse] = useState(null);
 
     function handleSelectStateChange(value) {
         console.log("Selected State changed to", value);
@@ -322,25 +324,24 @@ export default function Main() {
 
     function handleSubmit() {
         findGisJoin();
-        //setOpen(true);
-        /*
-        let requestBody = {
-            "collection": collection,
-            "field": field,
-            "gisJoin": gisJoin,
-            "period": timePeriod,
-            "timestep": timeStep
-        };
 
         if (gisJoin !== "") {
-            sendServerRequestWithBody("localhost", 8081, "eva", requestBody)
+            let requestBody = {
+                "collection": selectedCollection,
+                "field": selectedField,
+                "gisJoin": gisJoin,
+                "period": selectedReturnPeriod,
+                "timestep": selectedTimestep
+            };
+            setCurrentRequest(requestBody);
+
+            sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody)
             .then(response => {
                 console.log(response);
             });
         } else {
             console.log("gisJoin is empty");
         }
-        */
     }
 
     return (
