@@ -7,9 +7,9 @@ import { Autocomplete } from '@material-ui/lab';
 import {sendServerRequestWithBody} from "../api/requests";
 import Results from './Results';
 
-var gisJoinJson = require('../resources/gis_joins.json');
-var supportedCollectionsMetadata = require('../resources/collections_metadata.json');
-var exampleResponse = require('../resources/example_response.json.json');
+const gisJoinJson = require('../resources/gis_joins.json');
+const supportedCollectionsMetadata = require('../resources/collections_metadata.json');
+const exampleResponse = require('../resources/example_response.json');
 
 const useStyles = makeStyles({
     wipBanner: {
@@ -46,7 +46,7 @@ export default function Main() {
     const [selectedField, setSelectedField] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [currentRequest, setCurrentRequest] = useState(null);
-    const [currentResponse, setCurrentResponse] = useState(null);
+    const [currentResponse, setCurrentResponse] = useState(exampleResponse);
 
     function handleSelectStateChange(value) {
         if (value in gisJoinJson["states"]) {
@@ -311,6 +311,14 @@ export default function Main() {
         );
     }
 
+    function getResults() {
+        if (currentResponse) {
+            return <Results response={currentResponse}/>
+        } else {
+            return null;
+        }
+    }
+
     function findGisJoin() {
         if (selectedState) {
             if (selectedCounty) {
@@ -368,7 +376,7 @@ export default function Main() {
                     {getCollectionDescription()}
                 </Grid>
             </Paper>
-            <Results response={currentResponse}/>
+            {getResults()}
         </div>
     );
 }

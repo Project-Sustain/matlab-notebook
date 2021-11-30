@@ -10,8 +10,8 @@ export default function Results(props) {
         svgHeight = 500;
 
     let xAxisConfig = {
-        minValue: 0,
-        maxValue: 100,
+        minValue: 0.0,
+        maxValue: 2.0,
         rightShift: 70,
         downShift: svgHeight/2 + 10,
         linearScale: null
@@ -36,7 +36,7 @@ export default function Results(props) {
 
         // Add X-Axis to SVG
         svg.select("g#xAxis")
-            .attr("transform", `translate(${xAxisConfig.rightShift},${xAxisConfig.downShift})`)
+            .attr("transform", `translate(${xAxisConfig.rightShift},${xAxisConfig.downShift})`) // shift move it down and right
             .call(xAxis);
 
         // Add label to X-Axis
@@ -76,6 +76,7 @@ export default function Results(props) {
             .enter().append("circle")
             .attr("r", 2)
             .attr("cx", function (d) {
+                console.log(d[0]);
                 return xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift;
             })
             .attr("cy", function (d) {
@@ -92,7 +93,6 @@ export default function Results(props) {
      * @param points Array of points; must be an array in the form [ [x1,y1], [x2,y2], ..., [xn, yn] ]
      */
     function plotSolidLine(svg, points) {
-
         let line = d3.line()
             .x(d => xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift)
             .y(d => yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift);
