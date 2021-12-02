@@ -2,6 +2,7 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@mui/core": "^5.0.0-alpha.53",
