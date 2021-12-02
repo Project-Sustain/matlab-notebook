@@ -53,7 +53,7 @@ export default function Main() {
     const [selectedField, setSelectedField] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [currentRequest, setCurrentRequest] = useState(null);
-    const [currentResponse, setCurrentResponse] = useState(exampleResponse);
+    const [currentResponse, setCurrentResponse] = useState(null);
     const [submittedRequest, setSubmittedRequest] = useState(false);
 
     function findGisJoin() {
@@ -123,16 +123,15 @@ export default function Main() {
             setSubmittedRequest(true);
             setCurrentRequest(requestBody);
 
-            /*
-            sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody)
-            .then(response => {
-                console.log(response);
-            });
-             */
+            sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "eva", requestBody)
+                .then(response => {
+                    console.log(`Received response: ${response}`);
+                    setCurrentResponse(response);
+                    setSubmittedRequest(false);
+                });
 
-            setCurrentResponse(exampleResponse);
         } else {
-            console.log("gisJoin is empty");
+            console.log("Cannot submit request; gisJoin is empty!");
         }
     }
 
