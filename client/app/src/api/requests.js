@@ -1,16 +1,18 @@
 /* Exported functions for sending/receiving RESTful API requests/responses */
 
-export function sendEchoRequest(requestBody) {
-    sendServerRequestWithBody("localhost", 8081, "echo", requestBody)
-        .then(
-            response => {
-                console.log(response);
-            }
-        );
+export function sendEchoRequest(hostname, serverPort) {
+    const restfulAPI = `https://${hostname}:${serverPort}/echo`;
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    return processRestfulAPI(restfulAPI, requestOptions);
 }
 
 export function sendServerRequestWithBody(hostname, serverPort, route, requestBody) {
-    const restfulAPI = `http://${hostname}:${serverPort}/${route}`;
+    const restfulAPI = `https://${hostname}:${serverPort}/${route}`;
     const requestOptions = {
         method: "POST",
         headers: {

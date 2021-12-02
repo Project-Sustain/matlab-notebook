@@ -123,11 +123,11 @@ export default function Main() {
             setSubmittedRequest(true);
             setCurrentRequest(requestBody);
 
-            sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "eva", requestBody)
+            sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "echo", requestBody)
                 .then(response => {
                     console.log(`Received response: ${response}`);
-                    setCurrentResponse(response);
-                    setSubmittedRequest(false);
+                    //setCurrentResponse(response);
+                    //setSubmittedRequest(false);
                 });
 
         } else {
