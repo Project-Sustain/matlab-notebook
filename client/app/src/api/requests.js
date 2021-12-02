@@ -1,7 +1,7 @@
 /* Exported functions for sending/receiving RESTful API requests/responses */
 
 export function sendEchoRequest(hostname, serverPort) {
-    const restfulAPI = `https://${hostname}:${serverPort}/echo`;
+    const restfulAPI = `http://${hostname}:${serverPort}/echo`;
     const requestOptions = {
         method: "POST",
         headers: {
@@ -12,7 +12,7 @@ export function sendEchoRequest(hostname, serverPort) {
 }
 
 export function sendServerRequestWithBody(hostname, serverPort, route, requestBody) {
-    const restfulAPI = `https://${hostname}:${serverPort}/${route}`;
+    const restfulAPI = `http://${hostname}:${serverPort}/${route}`;
     const requestOptions = {
         method: "POST",
         headers: {

@@ -123,7 +123,7 @@ export default function Main() {
             setSubmittedRequest(true);
             setCurrentRequest(requestBody);
 
-            sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "echo", requestBody)
+            sendServerRequestWithBody("lattice-106.cs.colostate.edu", 31415, "echo", requestBody)
                 .then(response => {
                     console.log(`Received response: ${response}`);
                     //setCurrentResponse(response);
