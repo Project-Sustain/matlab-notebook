@@ -16,9 +16,8 @@ public class EvaLauncher {
     public static EvaResults launchExtremeValueAnalysis(MatlabEngine engine, double[] extrema) {
         log.info("Launching Extreme Value Analysis with ProNEVA...");
         try {
-            engine.eval("cd ProNEVA/");
+            engine.eval("cd ~/SustainProject/matlab-notebook/ProNEVA/");
             Object[] outputs = engine.feval(7, "runProNEVA", (Object) extrema);
-            engine.eval("cd ../../");
             // Collect results into List<Double>
             List<List<Double>> extremeValueAnalysisResults = new ArrayList<>();
             for (Object genericOutput : outputs) {
