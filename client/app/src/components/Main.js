@@ -18,6 +18,13 @@ const useStyles = makeStyles({
         padding: "20px",
         backgroundColor: "#f7dd86"
     },
+    completedBanner: {
+        width: "auto",
+        margin: "20px",
+        padding: "20px",
+        backgroundColor: "#77b86e",
+        color: "white"
+    },
     root: {
         width: "auto",
         margin: "20px",
@@ -47,6 +54,22 @@ export default function Main() {
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [currentRequest, setCurrentRequest] = useState(null);
     const [currentResponse, setCurrentResponse] = useState(exampleResponse);
+    const [submittedRequest, setSubmittedRequest] = useState(false);
+
+    function findGisJoin() {
+        if (selectedState) {
+            if (selectedCounty) {
+                console.log("County GISJOIN:", selectedCounty["GISJOIN"]);
+                return selectedCounty["GISJOIN"];
+            } else {
+                console.log("State GISJOIN:", selectedState["GISJOIN"]);
+                return selectedState["GISJOIN"];
+            }
+        } else {
+            console.error("Selected State cannot be empty!");
+            return null;
+        }
+    }
 
     function handleSelectStateChange(value) {
         if (value in gisJoinJson["states"]) {
@@ -83,6 +106,46 @@ export default function Main() {
                 setSelectedField(selectedCollection["supportedFields"][value]);
             }
         }
+    }
+
+    function handleSubmit() {
+        let gisJoin = findGisJoin();
+
+        if (gisJoin !== "") {
+            let requestBody = {
+                "collection": selectedCollection["collection"],
+                "field": selectedField["field"],
+                "gisJoin": gisJoin,
+                "period": selectedReturnPeriod,
+                "timestep": selectedTimestep
+            };
+
+            setSubmittedRequest(true);
+            setCurrentRequest(requestBody);
+
+            /*
+            sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody)
+            .then(response => {
+                console.log(response);
+            });
+             */
+
+            setCurrentResponse(exampleResponse);
+        } else {
+            console.log("gisJoin is empty");
+        }
+    }
+
+    function handleReset() {
+        console.log("Resetting all fields...");
+        setSelectedCollection(null);
+        setSelectedField(null);
+        setSelectedState(null);
+        setSelectedCounty(null);
+        setSelectedReturnPeriod(null);
+        setSelectedTimestep(0);
+        setCurrentRequest(null);
+        setCurrentResponse(null);
     }
 
     function getStateInput() {
@@ -286,7 +349,7 @@ export default function Main() {
         return null;
     }
 
-    function getSubmitButton() {
+    function getSubmitAndResetButtons() {
         let enabled = false;
         if (selectedState && selectedCollection && selectedField && selectedReturnPeriod) {
             if (selectedField["accumulationOrInstant"] === "Accumulation") {
@@ -299,6 +362,7 @@ export default function Main() {
         return (
             <Grid item xs={10} md={10}>
                 <Button disabled={!enabled} variant="outlined" onClick={handleSubmit}>Submit</Button>
+                <Button variant="outlined" onClick={handleReset}>Reset</Button>
             </Grid>
         );
     }
@@ -311,52 +375,35 @@ export default function Main() {
         );
     }
 
-    function getResults() {
+    function getAwaitingResponseBanner() {
+        if (submittedRequest) {
+            return (
+                <Paper elevation={3} className={classes.wipBanner}>
+                    Submitted request. Waiting for SUSTAIN to determine block extrema, run ProNEVA, and return results; This may take a few minutes.
+                </Paper>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    function getFinishedResponseBanner() {
         if (currentResponse) {
-            return <Results response={currentResponse}/>
+            return (
+                <Paper elevation={3} className={classes.completedBanner}>
+                    Received response. See the plotted results below.
+                </Paper>
+            );
         } else {
             return null;
         }
     }
 
-    function findGisJoin() {
-        if (selectedState) {
-            if (selectedCounty) {
-                console.log("County GISJOIN:", selectedCounty["GISJOIN"]);
-                return selectedCounty["GISJOIN"];
-            } else {
-                console.log("State GISJOIN:", selectedState["GISJOIN"]);
-                return selectedState["GISJOIN"];
-            }
+    function getResults() {
+        if (currentResponse && selectedField && selectedReturnPeriod) {
+            return <Results unit={selectedField["unit"]} returnPeriod={selectedReturnPeriod} response={currentResponse}/>
         } else {
-            console.error("Selected State cannot be empty!");
             return null;
-        }
-    }
-
-    function handleSubmit() {
-        let gisJoin = findGisJoin();
-
-        if (gisJoin !== "") {
-            let requestBody = {
-                "collection": selectedCollection["collection"],
-                "field": selectedField,
-                "gisJoin": gisJoin,
-                "period": selectedReturnPeriod,
-                "timestep": selectedTimestep
-            };
-            setCurrentRequest(requestBody);
-
-            /*
-            sendServerRequestWithBody("lattice-100", 8081, "eva", requestBody)
-            .then(response => {
-                console.log(response);
-            });
-             */
-
-            setCurrentResponse(exampleResponse);
-        } else {
-            console.log("gisJoin is empty");
         }
     }
 
@@ -371,11 +418,13 @@ export default function Main() {
                     {getCollectionFieldInput()}
                     {getTimestepRadios()}
                     {getReturnPeriodRadios()}
-                    {getSubmitButton()}
+                    {getSubmitAndResetButtons()}
                     {getCollectionFieldsInfo()}
                     {getCollectionDescription()}
                 </Grid>
             </Paper>
+            {getAwaitingResponseBanner()}
+            {getFinishedResponseBanner()}
             {getResults()}
         </div>
     );

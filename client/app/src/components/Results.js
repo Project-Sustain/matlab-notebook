@@ -1,13 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import * as d3 from 'd3';
 
 export default function Results(props) {
 
     var svgRef = React.createRef();
 
-    var margin = 20;
-    var svgWidth = 700,
+    let svgWidth  = 500,
         svgHeight = 500;
+
+    // Axis tick values/labels
+    let tickLabels = [2, 5, 10, 20, 50, 100]; // Actual tick values will be log10(tickLabels)
+    let tickValuesArray = [];
+    let tickValues = {};
+    for (let tickLabel of tickLabels) {
+        tickValuesArray.push(Math.log10(tickLabel));
+        tickValues[Math.log10(tickLabel)] = tickLabel;
+    }
 
     let xAxisConfig = {
         minValue: 0.0,
@@ -32,7 +40,12 @@ export default function Results(props) {
             .range([0, svgWidth-100]);
 
         // Create X-Axis and scale it to the Linear Scale
-        let xAxis = d3.axisBottom().scale(xAxisConfig.linearScale);
+        let xAxis = d3.axisBottom()
+            .tickValues(tickValuesArray)
+            .scale(xAxisConfig.linearScale)
+            .tickFormat(d => {
+                return tickValues[d];
+            });
 
         // Add X-Axis to SVG
         svg.select("g#xAxis")
@@ -41,13 +54,18 @@ export default function Results(props) {
 
         // Add label to X-Axis
         svg.select("text#xAxisLabel")
-            .attr("transform", `translate(${svgWidth/2 - 50},${xAxisConfig.downShift + 50})`)
+            .attr("transform", `translate(${svgWidth/2 - 80},${xAxisConfig.downShift + 50})`)
+            .style("font-size", "12px")
             .text(title);
     }
 
     function setupYAxis(svg, title, data) {
         // Find max of data array's y-points
         yAxisConfig.maxValue = d3.max(data, function (d) {
+            return d[1];
+        });
+
+        yAxisConfig.minValue = d3.min(data, function (d) {
             return d[1];
         });
 
@@ -66,54 +84,9 @@ export default function Results(props) {
 
         // Add label to Y-Axis
         svg.select("text#yAxisLabel")
-            .attr("transform", `translate(${20},${svgHeight/2-100}) rotate(-90)`)
+            .attr("transform", `translate(${20},${svgHeight/2-50}) rotate(-90)`)
+            .style("font-size", "12px")
             .text(title);
-    }
-
-    function plotScatterPlot(svg, points) {
-        svg.selectAll("dot")
-            .data(points)
-            .enter().append("circle")
-            .attr("r", 2)
-            .attr("cx", function (d) {
-                console.log(d[0]);
-                return xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift;
-            })
-            .attr("cy", function (d) {
-                return yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift;
-            })
-            .attr("stroke", "#3646f5")
-            .attr("stroke-width", 1.5)
-            .attr("fill", "#FFFFFF");
-    }
-
-    /**
-     * Plots a solid line on the SVG element by connecting the points given.
-     * @param svg Reference to our SVG element
-     * @param points Array of points; must be an array in the form [ [x1,y1], [x2,y2], ..., [xn, yn] ]
-     */
-    function plotSolidLine(svg, points) {
-        let line = d3.line()
-            .x(d => xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift)
-            .y(d => yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift);
-
-        // Make a d3 line:
-        // let valueline = d3.line()
-        //     .x(function (d) {
-        //         return (d[0]) + xAxisConfig.rightShift;
-        //     })
-        //     .y(function (d) {
-        //         return yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift;
-        //     });
-
-        svg.select("g#lines")
-            .selectAll("path")
-            .data([points])
-            .join("path")
-            .attr("d", d => line(d))
-            .attr("stroke", "#3646f5")
-            .attr("stroke-width", 1.5)
-            .attr("fill", "#FFFFFF");
     }
 
     /**
@@ -124,9 +97,6 @@ export default function Results(props) {
         let svg = d3.select(svgRef.current);
         svg.append("g").attr("id", "xAxis");
         svg.append("g").attr("id", "yAxis");
-        svg.append("g").attr("id", "scatterPlot");
-        svg.append("g").attr("id", "lines");
-        svg.append("text").attr("id", "marker");
         svg.append("text").attr("id", "xAxisLabel")
         svg.append("text").attr("id", "yAxisLabel")
     };
@@ -138,18 +108,77 @@ export default function Results(props) {
         let median = props.response["median"];
         let observations = props.response["observations"];
 
+        // Sort by x values
+        returnLevelConfidenceInterval50.sort((a, b) => (a[0]) - b[0]);
+        returnLevelConfidenceInterval05.sort((a, b) => (a[0]) - b[0]);
+        returnLevelConfidenceInterval95.sort((a, b) => (a[0]) - b[0]);
+        median.sort((a, b) => (a[0]) - b[0]);
+
         let svg = d3.select(svgRef.current);
         svg.attr("width", svgWidth);
         svg.attr("height", svgHeight);
-        setupXAxis(svg, "Return Period");
-        setupYAxis(svg, "Return Level", observations);
+        setupXAxis(svg, `Return Period (${props.returnPeriod})`);
+        setupYAxis(svg, `Return Level (${props.unit})`, observations);
 
-        // var data = [[12, 200], [20, 320], [66, 145], [53, 80], [24, 99], [80, 19], [10, 243], [33, 301], [100, 15]];
-        // var fakeLinePoints = [[0, 0], [50, 50], [75,100], [80, 150], [90, 250]];
-        // plotScatterPlot(svg, data);
-        // plotSolidLine(svg, fakeLinePoints);
+        let line = d3.line()
+            .x(d => xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift)
+            .y(d => yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift);
 
-        plotScatterPlot(svg, observations);
+        // Upper 95 % Confidence Interval Line
+        svg.append("path")
+            .data([returnLevelConfidenceInterval95])
+            .attr("d", d => line(d))
+            .attr("stroke", "#13A83D")
+            .style("stroke-dasharray", ("3,4"))
+            .attr("stroke-width", 1.5)
+            .attr("fill", "none");
+
+        // Lower 5 % Confidence Interval Line
+        svg.append("path")
+            .data([returnLevelConfidenceInterval05])
+            .attr("d", d => line(d))
+            .attr("stroke", "#13A83D")
+            .attr("stroke-width", 1.5)
+            .style("stroke-dasharray", ("3,4"))
+            .attr("fill", "none");
+
+        // Middle 50 % Confidence Interval Line
+        svg.append("path")
+            .data([returnLevelConfidenceInterval50])
+            .attr("d", d => line(d))
+            .attr("stroke", "#CC0000")
+            .attr("stroke-width", 1.2)
+            .attr("fill", "none");
+
+        // Median Line
+        svg.append("path")
+            .data([median])
+            .attr("d", d => line(d))
+            .attr("stroke", "#000000")
+            .attr("stroke-width", 1.0)
+            .style("stroke-dasharray", ("5,2"))
+            .attr("fill", "none");
+
+        // Observations Scatter-plot
+        svg.append("g")
+            .selectAll("dot")
+            .data(observations)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) { return xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift; } )
+            .attr("cy", function (d) { return yAxisConfig.linearScale(d[1]) + yAxisConfig.downShift; } )
+            .attr("r", 1.7)
+            .style("fill", "#0050EE");
+
+        // Append legend
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",130).attr("r", 3).style("fill", "#13A83D")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",160).attr("r", 3).style("fill", "#CC0000")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",190).attr("r", 3).style("fill", "#000000")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",220).attr("r", 3).style("fill", "#0050EE")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 130).text("90% CI").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 160).text("Median").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 190).text("MLE").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 220).text("Observations").style("font-size", "12px").attr("alignment-baseline","middle")
     }
 
     useEffect(setup);
