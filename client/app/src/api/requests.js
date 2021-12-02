@@ -24,17 +24,15 @@ export function sendServerRequestWithBody(hostname, serverPort, route, requestBo
 }
 
 export async function processRestfulAPI(restfulAPI, requestOptions) {
-    try {
-        console.log(requestOptions)
-        let response = await fetch(restfulAPI, requestOptions);
-        console.log(response);
+    let response = await fetch(restfulAPI, requestOptions);
+    let responseBody = await response.json();
+    if(response.status === 400) {
+        return {statusCode: 400, statusText: 'Bad Request', body: null};
+    } else {
         return {
             statusCode: response.status,
             statusText: response.statusText,
-            body: await response.json()
+            body: responseBody
         };
-    } catch(err) {
-        console.error(err);
-        return { statusCode: 0, statusText: 'Client failure', body: null };
     }
 }

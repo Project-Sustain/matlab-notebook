@@ -123,11 +123,13 @@ export default function Main() {
             setSubmittedRequest(true);
             setCurrentRequest(requestBody);
 
-            sendServerRequestWithBody("lattice-106.cs.colostate.edu", 31415, "echo", requestBody)
+            sendServerRequestWithBody("lattice-106.cs.colostate.edu", 31415, "eva", requestBody)
                 .then(response => {
-                    console.log(`Received response: ${response}`);
-                    //setCurrentResponse(response);
-                    //setSubmittedRequest(false);
+                    console.log(`Received response: code: ${response.statusCode}`);
+                    console.log(`Received response: statusText: ${response.statusText}`);
+                    console.log(`Received response: body:`, response.body);
+                    setCurrentResponse(response.body);
+                    setSubmittedRequest(false);
                 });
 
         } else {
