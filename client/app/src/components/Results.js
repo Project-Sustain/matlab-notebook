@@ -26,8 +26,6 @@ export default function Results(props) {
     };
 
     let yAxisConfig = {
-        minValue: 0,
-        maxValue: 100,
         rightShift: 70,
         downShift: 10,
         linearScale: null
@@ -59,19 +57,11 @@ export default function Results(props) {
             .text(title);
     }
 
-    function setupYAxis(svg, title, data) {
-        // Find max of data array's y-points
-        yAxisConfig.maxValue = d3.max(data, function (d) {
-            return d[1];
-        });
-
-        yAxisConfig.minValue = d3.min(data, function (d) {
-            return d[1];
-        });
+    function setupYAxis(svg, title, yMin, yMax) {
 
         // Create Linear Scale
         yAxisConfig.linearScale = d3.scaleLinear()
-            .domain([yAxisConfig.minValue, yAxisConfig.maxValue])
+            .domain([yMin, yMax])
             .range([svgHeight/2, 0]);
 
         // Create Y-Axis and scale it to the Linear Scale
@@ -113,12 +103,29 @@ export default function Results(props) {
         returnLevelConfidenceInterval05.sort((a, b) => (a[0]) - b[0]);
         returnLevelConfidenceInterval95.sort((a, b) => (a[0]) - b[0]);
         median.sort((a, b) => (a[0]) - b[0]);
+        observations.sort((a, b) => (a[0] - b[0]));
+
+        let yMin = Math.min(
+            returnLevelConfidenceInterval50[0][1],
+            returnLevelConfidenceInterval05[0][1],
+            returnLevelConfidenceInterval95[0][1],
+            median[0][1],
+            observations[0][1]
+        );
+
+        let yMax = Math.max(
+            returnLevelConfidenceInterval50[returnLevelConfidenceInterval50.length-1][1],
+            returnLevelConfidenceInterval05[returnLevelConfidenceInterval05.length-1][1],
+            returnLevelConfidenceInterval95[returnLevelConfidenceInterval95.length-1][1],
+            median[median.length-1][1],
+            observations[observations.length-1][1]
+        );
 
         let svg = d3.select(svgRef.current);
         svg.attr("width", svgWidth);
         svg.attr("height", svgHeight);
         setupXAxis(svg, `Return Period (${props.returnPeriod})`);
-        setupYAxis(svg, `Return Level (${props.unit})`, observations);
+        setupYAxis(svg, `Return Level (${props.unit})`, yMin, yMax);
 
         let line = d3.line()
             .x(d => xAxisConfig.linearScale(d[0]) + xAxisConfig.rightShift)
@@ -171,14 +178,14 @@ export default function Results(props) {
             .style("fill", "#0050EE");
 
         // Append legend
-        svg.append("circle").attr("cx",svgWidth-100).attr("cy",130).attr("r", 3).style("fill", "#13A83D")
-        svg.append("circle").attr("cx",svgWidth-100).attr("cy",160).attr("r", 3).style("fill", "#CC0000")
-        svg.append("circle").attr("cx",svgWidth-100).attr("cy",190).attr("r", 3).style("fill", "#000000")
-        svg.append("circle").attr("cx",svgWidth-100).attr("cy",220).attr("r", 3).style("fill", "#0050EE")
-        svg.append("text").attr("x", svgWidth-80).attr("y", 130).text("90% CI").style("font-size", "12px").attr("alignment-baseline","middle")
-        svg.append("text").attr("x", svgWidth-80).attr("y", 160).text("Median").style("font-size", "12px").attr("alignment-baseline","middle")
-        svg.append("text").attr("x", svgWidth-80).attr("y", 190).text("MLE").style("font-size", "12px").attr("alignment-baseline","middle")
-        svg.append("text").attr("x", svgWidth-80).attr("y", 220).text("Observations").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",190).attr("r", 3).style("fill", "#13A83D")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",205).attr("r", 3).style("fill", "#CC0000")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",220).attr("r", 3).style("fill", "#000000")
+        svg.append("circle").attr("cx",svgWidth-100).attr("cy",235).attr("r", 3).style("fill", "#0050EE")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 190).text("90% CI").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 205).text("Median").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 220).text("MLE").style("font-size", "12px").attr("alignment-baseline","middle")
+        svg.append("text").attr("x", svgWidth-80).attr("y", 235).text("Observations").style("font-size", "12px").attr("alignment-baseline","middle")
     }
 
     useEffect(setup);

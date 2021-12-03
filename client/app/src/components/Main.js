@@ -62,8 +62,8 @@ export default function Main() {
                 console.log("County GISJOIN:", selectedCounty["GISJOIN"]);
                 return selectedCounty["GISJOIN"];
             } else {
-                console.log("State GISJOIN:", selectedState["GISJOIN"]);
-                return selectedState["GISJOIN"];
+                console.error("Selected County cannot be empty!");
+                return null;
             }
         } else {
             console.error("Selected State cannot be empty!");
@@ -122,6 +122,7 @@ export default function Main() {
 
             setSubmittedRequest(true);
             setCurrentRequest(requestBody);
+            setCurrentResponse(null);
 
             sendServerRequestWithBody("lattice-106.cs.colostate.edu", 31415, "eva", requestBody)
                 .then(response => {
@@ -181,7 +182,7 @@ export default function Main() {
                         }
                     }}
                     disabled={!selectedState}
-                    renderInput={(params) => <TextField variant="outlined" {...params} label={"County"} />}
+                    renderInput={(params) => <TextField variant="outlined" required {...params} label={"County"} />}
                 />
             </Grid>
         );
@@ -352,7 +353,7 @@ export default function Main() {
 
     function getSubmitAndResetButtons() {
         let enabled = false;
-        if (selectedState && selectedCollection && selectedField && selectedReturnPeriod) {
+        if (selectedState && selectedCounty && selectedCollection && selectedField && selectedReturnPeriod) {
             if (selectedField["accumulationOrInstant"] === "Accumulation") {
                 enabled = selectedTimestep === 6 || selectedTimestep === 3;
             } else {
@@ -380,7 +381,7 @@ export default function Main() {
         if (submittedRequest) {
             return (
                 <Paper elevation={3} className={classes.wipBanner}>
-                    Submitted request. Waiting for SUSTAIN to determine block extrema, run ProNEVA, and return results; This may take a few minutes.
+                    Submitted request. Waiting for SUSTAIN to find block extrema, run ProNEVA, and return results; This may take a few minutes.
                 </Paper>
             );
         } else {
