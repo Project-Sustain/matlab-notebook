@@ -61,8 +61,6 @@ public class ExtremeValueAnalysis {
         List<Double> blockExtrema = new ArrayList<Double>(List.of(
                 320.34999999999997,
                 320.34999999999997,
-                310.95,
-                305.34999999999997,
                 317.54999999999995,
                 317.04999999999995,
                 320.34999999999997,
@@ -72,7 +70,6 @@ public class ExtremeValueAnalysis {
                 318.15,
                 317.54999999999995,
                 317.04999999999995,
-                298.15,
                 319.25,
                 318.15,
                 320.95,
