@@ -4,7 +4,7 @@ import {
     FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, TableHead, TableRow, Typography
 } from "@material-ui/core";
 import { Autocomplete } from '@material-ui/lab';
-import {sendServerRequestWithBody} from "../api/requests";
+import {sendServerRequestWithBody, sendServerRequestWithoutBody} from "../api/requests";
 import Results from './Results';
 
 const gisJoinJson = require('../resources/gis_joins.json');
@@ -124,7 +124,7 @@ export default function Main() {
             setCurrentRequest(requestBody);
             setCurrentResponse(null);
 
-            sendServerRequestWithBody("lattice-106.cs.colostate.edu", 31415, "eva", requestBody)
+            sendServerRequestWithoutBody("lattice-106.cs.colostate.edu", 31415, "eva/example")
                 .then(response => {
                     console.log(`Received response: code: ${response.statusCode}`);
                     console.log(`Received response: statusText: ${response.statusText}`);

@@ -23,6 +23,17 @@ export function sendServerRequestWithBody(hostname, serverPort, route, requestBo
     return processRestfulAPI(restfulAPI, requestOptions);
 }
 
+export function sendServerRequestWithoutBody(hostname, serverPort, route) {
+    const restfulAPI = `http://${hostname}:${serverPort}/${route}`;
+    const requestOptions = {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+    return processRestfulAPI(restfulAPI, requestOptions);
+}
+
 export async function processRestfulAPI(restfulAPI, requestOptions) {
     let response = await fetch(restfulAPI, requestOptions);
     let responseBody = await response.json();
