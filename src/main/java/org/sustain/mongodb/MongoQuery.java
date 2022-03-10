@@ -6,6 +6,7 @@ import com.mongodb.client.*;
 
 import com.mongodb.client.model.*;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,22 +108,27 @@ public class MongoQuery {
 
         try {
             Date defaultBucketDate = format.parse("2021-06-30T00:00:00Z");
+            Bson matchStage = Aggregates.match(Filters.and(
+                    Filters.eq("GISJOIN", gisJoin),
+                    Filters.eq("TIMESTEP_HOURS", timestep)
+            ));
+            Bson bucketStage = Aggregates.bucket(
+                    "$DATE",
+                    periodBoundaries,
+                    new BucketOptions()
+                            .defaultBucket(defaultBucketDate)
+                            .output(
+                                    Accumulators.max("MAX_"+field, "$"+field)
+                            )
+            );
+
+            log.info("Match stage: {}", matchStage.toBsonDocument().toJson());
+            log.info("Bucket stage: {}", bucketStage.toBsonDocument().toJson());
 
             AggregateIterable<Document> results = this.collection.aggregate(
                     Arrays.asList(
-                            Aggregates.match(Filters.and(
-                                    Filters.eq("GISJOIN", gisJoin),
-                                    Filters.eq("TIMESTEP_HOURS", timestep)
-                            )),
-                            Aggregates.bucket(
-                                    "$DATE",
-                                    periodBoundaries,
-                                    new BucketOptions()
-                                            .defaultBucket(defaultBucketDate)
-                                            .output(
-                                                    Accumulators.max("MAX_"+field, "$"+field)
-                                            )
-                            )
+                            matchStage,
+                            bucketStage
                     )
             );
 
