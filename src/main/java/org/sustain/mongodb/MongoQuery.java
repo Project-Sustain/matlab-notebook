@@ -106,38 +106,33 @@ public class MongoQuery {
 
         List<Double> blockExtrema = new ArrayList<>();
 
-        try {
-            Date defaultBucketDate = format.parse("2021-06-30T00:00:00Z");
-            Bson matchStage = Aggregates.match(Filters.and(
-                    Filters.eq("GISJOIN", gisJoin)
-            ));
-            Bson bucketStage = Aggregates.bucket(
-                    "$DATE",
-                    periodBoundaries,
-                    new BucketOptions()
-                            .defaultBucket(defaultBucketDate)
-                            .output(
-                                    Accumulators.max("MAX_"+field, "$"+field)
-                            )
-            );
+        Date defaultBucketDate = periodBoundaries.get(periodBoundaries.size()-1);
+        Bson matchStage = Aggregates.match(Filters.and(
+                Filters.eq("GISJOIN", gisJoin)
+        ));
+        Bson bucketStage = Aggregates.bucket(
+                "$DATE",
+                periodBoundaries,
+                new BucketOptions()
+                        .defaultBucket(defaultBucketDate)
+                        .output(
+                                Accumulators.max("MAX_"+field, "$"+field)
+                        )
+        );
 
-            log.info("Match stage: {}", matchStage.toBsonDocument().toJson());
-            log.info("Bucket stage: {}", bucketStage.toBsonDocument().toJson());
+        log.info("Match stage: {}", matchStage.toBsonDocument().toJson());
+        log.info("Bucket stage: {}", bucketStage.toBsonDocument().toJson());
 
-            AggregateIterable<Document> results = this.collection.aggregate(
-                    Arrays.asList(
-                            matchStage,
-                            bucketStage
-                    )
-            );
+        AggregateIterable<Document> results = this.collection.aggregate(
+                Arrays.asList(
+                        matchStage,
+                        bucketStage
+                )
+        );
 
-            for (Document result: results) {
-                log.info(result.toJson());
-                blockExtrema.add(result.getDouble("MAX_"+field));
-            }
-        } catch (ParseException e) {
-            log.error("Failed to parse default bucket format: {}", e.getMessage());
-
+        for (Document result: results) {
+            log.info(result.toJson());
+            blockExtrema.add(result.getDouble("MAX_"+field));
         }
 
         return blockExtrema;
