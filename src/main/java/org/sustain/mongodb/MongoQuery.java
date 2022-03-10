@@ -109,8 +109,7 @@ public class MongoQuery {
         try {
             Date defaultBucketDate = format.parse("2021-06-30T00:00:00Z");
             Bson matchStage = Aggregates.match(Filters.and(
-                    Filters.eq("GISJOIN", gisJoin),
-                    Filters.eq("TIMESTEP_HOURS", timestep)
+                    Filters.eq("GISJOIN", gisJoin)
             ));
             Bson bucketStage = Aggregates.bucket(
                     "$DATE",
