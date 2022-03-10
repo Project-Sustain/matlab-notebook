@@ -96,14 +96,21 @@ export default function Main() {
     }
 
     function handleSelectFieldChange(value) {
-        console.log("Selected Collection by name", value);
+        console.log("Selected Collection field by name", value);
         if (selectedCollection) {
-            if (value in selectedCollection["supportedFields"]) {
-                let fieldObj = selectedCollection["supportedFields"][value];
-                if (fieldObj["accumulationOrInstant"] === "Instant") {
-                    setSelectedTimestep(0);
+            let supportedFields = selectedCollection["fieldMetadata"];
+            for (let i = 0; i < supportedFields.length; i++) {
+                if (supportedFields[i]["name"] === value) {
+                    console.log("Found supported field")
+                    let fieldObj = supportedFields[i];
+                    if (fieldObj["accumulationOrInstant"] === "Instant") {
+                        setSelectedTimestep(0);
+                        setSelectedField(fieldObj);
+                    } else {
+                        console.log("Accumulation-based fields not currently supported on server");
+                        setSelectedField("");
+                    }
                 }
-                setSelectedField(selectedCollection["supportedFields"][value]);
             }
         }
     }
@@ -124,7 +131,7 @@ export default function Main() {
             setCurrentRequest(requestBody);
             setCurrentResponse(null);
 
-            sendServerRequestWithoutBody("lattice-106.cs.colostate.edu", 31415, "eva/example")
+            sendServerRequestWithoutBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/eva")
                 .then(response => {
                     console.log(`Received response: code: ${response.statusCode}`);
                     console.log(`Received response: statusText: ${response.statusText}`);
@@ -208,14 +215,26 @@ export default function Main() {
         );
     }
 
+    function getFieldOptions() {
+        let fieldsDisplayed = [];
+        if (selectedCollection) {
+            for (let field of selectedCollection["fieldMetadata"]) {
+                if (field["accumulationOrInstant"] === "Instant") {
+                    fieldsDisplayed.push(field["name"]);
+                }
+            }
+        }
+        return fieldsDisplayed;
+    }
+
     function getCollectionFieldInput() {
         return (
             <Grid item xs={6} md={6}>
                 <Autocomplete
                     className={classes.autocomplete}
                     autoHighlight
-                    options={selectedCollection ? Object.keys(selectedCollection["fieldMetadata"]) : []}
-                    defaultValue={selectedCollection ? Object.keys(selectedCollection["fieldMetadata"])[0] : ''}
+                    options={getFieldOptions()}
+                    defaultValue={selectedCollection ? Object.keys(selectedCollection["fieldMetadata"])[8]["name"] : ''}
                     value={selectedField ? selectedField.name : ''}
                     onChange={(event, value) => {
                         if (value) {
@@ -372,7 +391,7 @@ export default function Main() {
     function getWorkInProgressBanner() {
         return (
             <Paper elevation={3} className={classes.wipBanner}>
-                Site/Service currently in-progress. <em>Coming soon</em>: Support for more datasets, user-defined models
+                Site/Service currently in-progress. <em>Coming soon</em>: Support for more datasets and user-defined models
             </Paper>
         );
     }

@@ -1,270 +1,273 @@
 {
-  "name": "NOAA NAM",
-  "longName": "National Center for Environmental Information",
-  "collection": "noaa_nam",
-  "dataSource": "https://www.ncei.noaa.gov/products/weather-climate-models/north-american-mesoscale",
-  "descriptionSource": "https://www.ncei.noaa.gov/products/weather-climate-models/north-american-mesoscale",
-  "description": "The North American Mesoscale Forecast System (NAM) is one of the National Centers For Environmental Prediction’s (NCEP) major models for producing weather forecasts. NAM generates multiple grids (or domains) of weather forecasts over the North American continent at various horizontal resolutions. Each grid contains data for dozens of weather parameters, including temperature, precipitation, lightning, and turbulent kinetic energy. NAM uses additional numerical weather models to generate high-resolution forecasts over fixed regions, and occasionally to follow significant weather events like hurricanes.",
-  "temporalKey": "TIMESTAMP",
-  "fieldMetadata": [
-    {
-      "name": "Grid row index of observation",
-      "field": "ROW",
-      "unit": "Index",
-      "type": "Integer",
-      "accumulationOrInstant": "N/A"
-    },
-    {
-      "name": "Grid column index of observation",
-      "field": "COL",
-      "unit": "Index",
-      "type": "Integer",
-      "accumulationOrInstant": "N/A"
-    },
-    {
-      "name": "Latitude of observation",
-      "field": "LATITUDE",
-      "unit": "CRS WGS84 Latitude",
-      "type": "Double",
-      "accumulationOrInstant": "N/A"
-    },
-    {
-      "name": "Longitude of observation",
-      "field": "LONGITUDE",
-      "unit": "CRS WGS84 Longitude",
-      "type": "Double",
-      "accumulationOrInstant": "N/A"
-    },
-    {
-      "name": "County GISJOIN identifier of observation",
-      "field": "GISJOIN",
-      "unit": "Identifier",
-      "type": "String",
-      "accumulationOrInstant": "N/A"
-    },
-    {
-      "name": "Date of observation",
-      "field": "DATE",
-      "unit": "ISODate",
-      "type": "ISODate Object",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Timestep in hours of observation",
-      "field": "TIMESTEP_HOURS",
-      "unit": "Hours since observation",
-      "type": "Integer",
-      "accumulationOrInstant": "Accumulation"
-    },
-    {
-      "name": "Timestamp of observation",
-      "field": "TIMESTAMP_MS_SINCE_EPOCH",
-      "unit": "Milliseconds since Epoch",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Pressure (Reduced to Mean Sea Level)",
-      "field": "PRESSURE_REDUCED_TO_MSL_PASCAL",
-      "unit": "Pascal",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Visibility at Surface",
-      "field": "VISIBILITY_AT_SURFACE_METERS",
-      "unit": "Meters",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Visibility at Cloud Top",
-      "field": "VISIBILITY_AT_CLOUD_TOP_METERS",
-      "unit": "Meters",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "U Component of Wind at Planetary Boundary Layer",
-      "field": "U_COMPONENT_OF_WIND_AT_PLANETARY_BOUNDARY_LAYER_METERS_PER_SEC",
-      "unit": "Meters per Second",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "V Component of Wind at Planetary Boundary Layer",
-      "field": "V_COMPONENT_OF_WIND_AT_PLANETARY_BOUNDARY_LAYER_METERS_PER_SEC",
-      "unit": "Meters per Second",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Wind Gust Speed at Surface",
-      "field": "WIND_GUST_SPEED_AT_SURFACE_METERS_PER_SEC",
-      "unit": "Meters per Second",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Pressure at Surface",
-      "field": "PRESSURE_AT_SURFACE_PASCAL",
-      "unit": "Pascal",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Temperature at Surface",
-      "field": "TEMPERATURE_AT_SURFACE_KELVIN",
-      "unit": "Kelvin",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Soil Temperature 0 to 0.1 Meters Below Surface",
-      "field": "SOIL_TEMPERATURE_0_TO_01_M_BELOW_SURFACE_KELVIN",
-      "unit": "Kelvin",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Volumetric Soil Moisture Content 0 to 0.1 Meters Below Surface",
-      "field": "VOLUMETRIC_SOIL_MOISTURE_CONTENT_0_TO_01_M_BELOW_SURFACE_FRACTION",
-      "unit": "Fraction",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Snow Cover at Surface",
-      "field": "SNOW_COVER_AT_SURFACE_PERCENT",
-      "unit": "Percent",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Snow Depth at Surface",
-      "field": "SNOW_DEPTH_AT_SURFACE_METERS",
-      "unit": "Meters",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Temperature 2 Meters Above Surface",
-      "field": "TEMPERATURE_2_METERS_ABOVE_SURFACE_KELVIN",
-      "unit": "Kelvin",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Dewpoint Temperature 2 Meters Above Surface",
-      "field": "DEWPOINT_TEMPERATURE_2_METERS_ABOVE_SURFACE_KELVIN",
-      "unit": "Kelvin",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Relative Humidity 2 Meters Above Surface",
-      "field": "RELATIVE_HUMIDITY_2_METERS_ABOVE_SURFACE_PERCENT",
-      "unit": "Percent",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "U Component of Wind 10 Meters Above Surface",
-      "field": "U_COMPONENT_OF_WIND_10_METERS_ABOVE_SURFACE_METERS_PER_SEC",
-      "unit": "Meters per Second",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "V Component of Wind 10 Meters Above Surface",
-      "field": "V_COMPONENT_OF_WIND_10_METERS_ABOVE_SURFACE_METERS_PER_SEC",
-      "unit": "Meters per Second",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Total Precipitation at Surface",
-      "field": "TOTAL_PRECIPITATION_SURFACE_ACCUM_KG_PER_SQ_METER",
-      "unit": "Kilograms per Squared Meter",
-      "type": "Double",
-      "accumulationOrInstant": "Accumulation"
-    },
-    {
-      "name": "Convective Precipitation at Surface",
-      "field": "CONVECTIVE_PRECIPITATION_SURFACE_ACCUM_KG_PER_SQ_METER",
-      "unit": "Kilograms per Squared Meter",
-      "type": "Double",
-      "accumulationOrInstant": "Accumulation"
-    },
-    {
-      "name": "Geopotential Height at Lowest Level Wet Bulb Zero",
-      "field": "GEOPOTENTIAL_HEIGHT_LOWEST_LEVEL_WET_BULB_ZERO_GPM",
-      "unit": "Geopotential Meters",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Categorical Snow at Surface",
-      "field": "CATEGORICAL_SNOW_SURFACE_BINARY",
-      "unit": "Binary",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Categorical Ice Pellets at Surface",
-      "field": "CATEGORICAL_ICE_PELLETS_SURFACE_BINARY",
-      "unit": "Binary",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Categorical Freezing Rain at Surface",
-      "field": "CATEGORICAL_FREEZING_RAIN_SURFACE_BINARY",
-      "unit": "Binary",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Categorical Rain at Surface",
-      "field": "CATEGORICAL_RAIN_SURFACE_BINARY",
-      "unit": "Binary",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Vegetation at Surface",
-      "field": "VEGETATION_SURFACE_PERCENT",
-      "unit": "Percent",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Vegetation Type (Simple Biosphere Model)",
-      "field": "VEGETATION_TYPE_SIB_INT",
-      "unit": "Identifier",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Soil Type (Zobler)",
-      "field": "SOIL_TYPE_ZOBLER_INT",
-      "unit": "Identifier",
-      "type": "Integer",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Albedo Percent",
-      "field": "ALBEDO_PERCENT",
-      "unit": "Percent",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    },
-    {
-      "name": "Total Cloud Cover Percent",
-      "field": "TOTAL_CLOUD_COVER_PERCENT",
-      "unit": "Percent",
-      "type": "Double",
-      "accumulationOrInstant": "Instant"
-    }
-  ]
+  "NOAA NAM": {
+    "name": "NOAA NAM",
+    "longName": "National Center for Environmental Information",
+    "collection": "noaa_nam",
+    "dataSource": "https://www.ncei.noaa.gov/products/weather-climate-models/north-american-mesoscale",
+    "descriptionSource": "https://www.ncei.noaa.gov/products/weather-climate-models/north-american-mesoscale",
+    "description": "The North American Mesoscale Forecast System (NAM) is one of the National Centers For Environmental Prediction’s (NCEP) major models for producing weather forecasts. NAM generates multiple grids (or domains) of weather forecasts over the North American continent at various horizontal resolutions. Each grid contains data for dozens of weather parameters, including temperature, precipitation, lightning, and turbulent kinetic energy. NAM uses additional numerical weather models to generate high-resolution forecasts over fixed regions, and occasionally to follow significant weather events like hurricanes.",
+    "temporalKey": "TIMESTAMP",
+    "fieldMetadata": [
+      {
+        "name": "Grid row index of observation",
+        "field": "ROW",
+        "unit": "Index",
+        "type": "Integer",
+        "accumulationOrInstant": "N/A"
+      },
+      {
+        "name": "Grid column index of observation",
+        "field": "COL",
+        "unit": "Index",
+        "type": "Integer",
+        "accumulationOrInstant": "N/A"
+      },
+      {
+        "name": "Latitude of observation",
+        "field": "LATITUDE",
+        "unit": "CRS WGS84 Latitude",
+        "type": "Double",
+        "accumulationOrInstant": "N/A"
+      },
+      {
+        "name": "Longitude of observation",
+        "field": "LONGITUDE",
+        "unit": "CRS WGS84 Longitude",
+        "type": "Double",
+        "accumulationOrInstant": "N/A"
+      },
+      {
+        "name": "County GISJOIN identifier of observation",
+        "field": "GISJOIN",
+        "unit": "Identifier",
+        "type": "String",
+        "accumulationOrInstant": "N/A"
+      },
+      {
+        "name": "Date of observation",
+        "field": "DATE",
+        "unit": "ISODate",
+        "type": "ISODate Object",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Timestep in hours of observation",
+        "field": "TIMESTEP_HOURS",
+        "unit": "Hours since observation",
+        "type": "Integer",
+        "accumulationOrInstant": "Accumulation"
+      },
+      {
+        "name": "Timestamp of observation",
+        "field": "TIMESTAMP_MS_SINCE_EPOCH",
+        "unit": "Milliseconds since Epoch",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Pressure (Reduced to Mean Sea Level)",
+        "field": "PRESSURE_REDUCED_TO_MSL_PASCAL",
+        "unit": "Pascal",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Visibility at Surface",
+        "field": "VISIBILITY_AT_SURFACE_METERS",
+        "unit": "Meters",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Visibility at Cloud Top",
+        "field": "VISIBILITY_AT_CLOUD_TOP_METERS",
+        "unit": "Meters",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "U Component of Wind at Planetary Boundary Layer",
+        "field": "U_COMPONENT_OF_WIND_AT_PLANETARY_BOUNDARY_LAYER_METERS_PER_SEC",
+        "unit": "Meters per Second",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "V Component of Wind at Planetary Boundary Layer",
+        "field": "V_COMPONENT_OF_WIND_AT_PLANETARY_BOUNDARY_LAYER_METERS_PER_SEC",
+        "unit": "Meters per Second",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Wind Gust Speed at Surface",
+        "field": "WIND_GUST_SPEED_AT_SURFACE_METERS_PER_SEC",
+        "unit": "Meters per Second",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Pressure at Surface",
+        "field": "PRESSURE_AT_SURFACE_PASCAL",
+        "unit": "Pascal",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Temperature at Surface",
+        "field": "TEMPERATURE_AT_SURFACE_KELVIN",
+        "unit": "Kelvin",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Soil Temperature 0 to 0.1 Meters Below Surface",
+        "field": "SOIL_TEMPERATURE_0_TO_01_M_BELOW_SURFACE_KELVIN",
+        "unit": "Kelvin",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Volumetric Soil Moisture Content 0 to 0.1 Meters Below Surface",
+        "field": "VOLUMETRIC_SOIL_MOISTURE_CONTENT_0_TO_01_M_BELOW_SURFACE_FRACTION",
+        "unit": "Fraction",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Snow Cover at Surface",
+        "field": "SNOW_COVER_AT_SURFACE_PERCENT",
+        "unit": "Percent",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Snow Depth at Surface",
+        "field": "SNOW_DEPTH_AT_SURFACE_METERS",
+        "unit": "Meters",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Temperature 2 Meters Above Surface",
+        "field": "TEMPERATURE_2_METERS_ABOVE_SURFACE_KELVIN",
+        "unit": "Kelvin",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Dewpoint Temperature 2 Meters Above Surface",
+        "field": "DEWPOINT_TEMPERATURE_2_METERS_ABOVE_SURFACE_KELVIN",
+        "unit": "Kelvin",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Relative Humidity 2 Meters Above Surface",
+        "field": "RELATIVE_HUMIDITY_2_METERS_ABOVE_SURFACE_PERCENT",
+        "unit": "Percent",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "U Component of Wind 10 Meters Above Surface",
+        "field": "U_COMPONENT_OF_WIND_10_METERS_ABOVE_SURFACE_METERS_PER_SEC",
+        "unit": "Meters per Second",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "V Component of Wind 10 Meters Above Surface",
+        "field": "V_COMPONENT_OF_WIND_10_METERS_ABOVE_SURFACE_METERS_PER_SEC",
+        "unit": "Meters per Second",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Total Precipitation at Surface",
+        "field": "TOTAL_PRECIPITATION_SURFACE_ACCUM_KG_PER_SQ_METER",
+        "unit": "Kilograms per Squared Meter",
+        "type": "Double",
+        "accumulationOrInstant": "Accumulation"
+      },
+      {
+        "name": "Convective Precipitation at Surface",
+        "field": "CONVECTIVE_PRECIPITATION_SURFACE_ACCUM_KG_PER_SQ_METER",
+        "unit": "Kilograms per Squared Meter",
+        "type": "Double",
+        "accumulationOrInstant": "Accumulation"
+      },
+      {
+        "name": "Geopotential Height at Lowest Level Wet Bulb Zero",
+        "field": "GEOPOTENTIAL_HEIGHT_LOWEST_LEVEL_WET_BULB_ZERO_GPM",
+        "unit": "Geopotential Meters",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Categorical Snow at Surface",
+        "field": "CATEGORICAL_SNOW_SURFACE_BINARY",
+        "unit": "Binary",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Categorical Ice Pellets at Surface",
+        "field": "CATEGORICAL_ICE_PELLETS_SURFACE_BINARY",
+        "unit": "Binary",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Categorical Freezing Rain at Surface",
+        "field": "CATEGORICAL_FREEZING_RAIN_SURFACE_BINARY",
+        "unit": "Binary",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Categorical Rain at Surface",
+        "field": "CATEGORICAL_RAIN_SURFACE_BINARY",
+        "unit": "Binary",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Vegetation at Surface",
+        "field": "VEGETATION_SURFACE_PERCENT",
+        "unit": "Percent",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Vegetation Type (Simple Biosphere Model)",
+        "field": "VEGETATION_TYPE_SIB_INT",
+        "unit": "Identifier",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Soil Type (Zobler)",
+        "field": "SOIL_TYPE_ZOBLER_INT",
+        "unit": "Identifier",
+        "type": "Integer",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Albedo Percent",
+        "field": "ALBEDO_PERCENT",
+        "unit": "Percent",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      },
+      {
+        "name": "Total Cloud Cover Percent",
+        "field": "TOTAL_CLOUD_COVER_PERCENT",
+        "unit": "Percent",
+        "type": "Double",
+        "accumulationOrInstant": "Instant"
+      }
+    ]
+  }
+
 }
