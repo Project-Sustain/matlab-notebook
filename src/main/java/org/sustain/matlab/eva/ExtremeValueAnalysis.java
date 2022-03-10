@@ -33,10 +33,10 @@ public class ExtremeValueAnalysis {
 
         log.info("Request: {}", request);
         MongoQuery mongoQuery = new MongoQuery("sustaindb", request.collection);
-        List<Long> minAndMaxDates = mongoQuery.getMinAndMaxDates(request.gisJoin);
-        Long min = minAndMaxDates.get(0);
-        Long max = minAndMaxDates.get(1);
-        List<Long> bucketBounds = getDateBoundariesByPeriod(request.period, min, max);
+        List<Date> minAndMaxDates = mongoQuery.getMinAndMaxDates(request.gisJoin);
+        Date min = minAndMaxDates.get(0);
+        Date max = minAndMaxDates.get(1);
+        List<Date> bucketBounds = getDateBoundariesByPeriod(request.period, min, max);
         List<Double> blockExtrema = mongoQuery.findBlockExtrema(
                 request.field, request.gisJoin, request.timestep, bucketBounds
         );
@@ -159,51 +159,44 @@ public class ExtremeValueAnalysis {
      * Creates bucket boundaries for the period blocks used to get extrema. One extreme value is retrieved from
      * each of the blocks in the period.
      * @param period A String with one of the values ["year", "month", "day", "hour"]
-     * @param minDateNumber The beginning date of the range of periods, in YYYYMMDDHH format.
-     * @param maxDateNumber The end date of the range of periods, in YYYYMMDDHH format.
+     * @param minDate The beginning Date of the range of periods
+     * @param maxDate The end Date of the range of periods
      * @return A list of inclusive/exclusive period boundaries, where the first element is inclusive and the next is exclusive.
-     * For example, if the list [2010010100, 2010010200, 2010010300] is returned, then the first bucket period is
-     * from Jan 1, 2010 to Jan 31, 2010, and the second bucket period is from Feb 1, 2010 to Feb 27/28, 2010.
+     *
+     * { "_id" : null, "MAX_DATE" : ISODate("2021-06-30T18:00:00Z"), "MIN_DATE" : ISODate("2017-09-01T00:00:00Z") }
      */
-    public static List<Long> getDateBoundariesByPeriod(String period, Long minDateNumber, Long maxDateNumber) {
-        List<Long> boundaries = new ArrayList<>();
-        boundaries.add(minDateNumber); // start with minimum date as first boundary
+    public static List<Date> getDateBoundariesByPeriod(String period, Date minDate, Date maxDate) {
+        List<Date> boundaries = new ArrayList<>();
+        boundaries.add(minDate); // start with minimum date as first boundary
 
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHHH");
-            Date minDate = format.parse(Long.toString(minDateNumber));
-            Date maxDate = format.parse(Long.toString(maxDateNumber));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(minDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(minDate);
 
-            // Determine period increment amount
-            int field = Calendar.YEAR;
-            int amount = 1;
-            switch (period.trim().toLowerCase()) {
-                case "year":
-                    break; // default
-                case "month":
-                    field = Calendar.MONTH;
-                    break;
-                case "day":
-                    field = Calendar.DAY_OF_YEAR;
-                    break;
-                case "hour":
-                    field = Calendar.HOUR_OF_DAY;
-                    amount = 3;
-                    break;
-                default:
-                    log.error("Period \"{}\" not supported, defaulting to yearly periods", period);
-            }
+        // Determine period increment amount
+        int field = Calendar.YEAR;
+        int amount = 1;
+        switch (period.trim().toLowerCase()) {
+            case "year":
+                break; // default
+            case "month":
+                field = Calendar.MONTH;
+                break;
+            case "day":
+                field = Calendar.DAY_OF_YEAR;
+                break;
+            case "hour":
+                field = Calendar.HOUR_OF_DAY;
+                amount = 3;
+                break;
+            default:
+                log.error("Period \"{}\" not supported, defaulting to yearly periods", period);
+        }
 
-            // Add intermediate date boundaries
-            while (calendar.getTime().before(maxDate)) {
-                calendar.add(field, amount);
-                Date boundaryDate = calendar.getTime();
-                boundaries.add(Long.parseLong(format.format(boundaryDate)));
-            }
-        } catch (ParseException e) {
-            log.error("Unable to parse date: {}", e.getMessage());
+        // Add intermediate date boundaries
+        while (calendar.getTime().before(maxDate)) {
+            calendar.add(field, amount);
+            Date boundaryDate = calendar.getTime();
+            boundaries.add(boundaryDate);
         }
 
         return boundaries;

@@ -2,35 +2,41 @@ package org.sustain.matlab.eva;
 
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class EvaControllerTest {
 
     @Test
     public void testGetDateBoundariesByPeriod() {
 
-        Long minDate = 202101010000L;
-        Long maxDate = 202110230600L;
-        List<Long> expected = new ArrayList<>(List.of(
-                202101010000L,
-                202102010000L,
-                202103010000L,
-                202104010000L,
-                202105010000L,
-                202106010000L,
-                202107010000L,
-                202108010000L,
-                202109010000L,
-                202110010000L,
-                202111010000L,
-                202112010000L
-        ));
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date minDate = format.parse("2015-12-07T10:38:17.498Z");
+            Date maxDate = format.parse("2016-03-07T10:38:17.498Z");
 
-        List<Long> actual = ExtremeValueAnalysis.getDateBoundariesByPeriod("month", minDate, maxDate);
-        System.out.println(actual);
-        assertEquals(expected, actual);
+            List<Date> expected = new ArrayList<>(List.of(
+                    format.parse("2015-12-07T10:38:17.498Z"),
+                    format.parse("2016-01-07T10:38:17.498Z"),
+                    format.parse("2016-02-07T10:38:17.498Z"),
+                    format.parse("2016-03-07T10:38:17.498Z")
+            ));
+
+            List<Date> actual = ExtremeValueAnalysis.getDateBoundariesByPeriod("month", minDate, maxDate);
+            for (Date date: actual) {
+                System.out.println(date.toString());
+            }
+            assertEquals(expected, actual);
+        } catch (ParseException e) {
+            System.err.println("Caught ParseException: " + e.getMessage());
+            fail();
+        }
+
     }
 }
