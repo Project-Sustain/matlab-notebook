@@ -105,7 +105,7 @@ public class MongoQuery {
                                     Filters.eq("TIMESTEP", timestep)
                             )),
                             Aggregates.bucket(
-                                    "$YYYYMMDDHHHH",
+                                    "$DATE",
                                     periodBoundaries,
                                     new BucketOptions()
                                             .defaultBucket(defaultBucketDate)
