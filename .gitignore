@@ -3,3 +3,4 @@
 build/
 target/
 ProNEVA/USER_INPUT.mat
+*.log
