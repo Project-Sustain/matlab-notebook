@@ -8,7 +8,7 @@ import {sendServerRequestWithBody, sendServerRequestWithoutBody} from "../api/re
 import Results from './Results';
 
 const gisJoinJson = require('../resources/gis_joins.json');
-const supportedCollectionsMetadata = require('../resources/collections_metadata.json');
+const supportedCollectionsMetadata = require('../resources/collections_metadata_new.json');
 const exampleResponse = require('../resources/example_response.json');
 
 const useStyles = makeStyles({
@@ -214,8 +214,8 @@ export default function Main() {
                 <Autocomplete
                     className={classes.autocomplete}
                     autoHighlight
-                    options={selectedCollection ? Object.keys(selectedCollection["supportedFields"]) : []}
-                    defaultValue={selectedCollection ? Object.keys(selectedCollection["supportedFields"])[0] : ''}
+                    options={selectedCollection ? Object.keys(selectedCollection["fieldMetadata"]) : []}
+                    defaultValue={selectedCollection ? Object.keys(selectedCollection["fieldMetadata"])[0] : ''}
                     value={selectedField ? selectedField.name : ''}
                     onChange={(event, value) => {
                         if (value) {
@@ -233,7 +233,7 @@ export default function Main() {
         if (selectedCollection) {
 
             let rows = [];
-            let fields = selectedCollection["supportedFields"];
+            let fields = selectedCollection["fieldMetadata"];
             for (let key in fields) {
                 let value = fields[key];
                 rows.push(value);
@@ -259,9 +259,9 @@ export default function Main() {
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                     >
                                         <TableCell component="th" scope="row">{row.name}</TableCell>
-                                        <TableCell align="right">{row.unit}</TableCell>
-                                        <TableCell align="right">{row.type}</TableCell>
-                                        <TableCell align="right">{row.accumulationOrInstant}</TableCell>
+                                        <TableCell align="right">{row["unit"]}</TableCell>
+                                        <TableCell align="right">{row["type"]}</TableCell>
+                                        <TableCell align="right">{row["accumulationOrInstant"]}</TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
@@ -291,7 +291,7 @@ export default function Main() {
 
     function getTimestepRadios() {
         if (selectedCollection && selectedCollection.name === "NOAA NAM") {
-            if (selectedField && selectedField.accumulationOrInstant === "Accumulation") {
+            if (selectedField && selectedField["accumulationOrInstant"] === "Accumulation") {
                 let timesteps = [3,6];
                 return (
                     <Grid item xs={10} md={10}>
