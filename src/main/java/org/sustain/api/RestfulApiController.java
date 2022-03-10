@@ -49,7 +49,7 @@ public class RestfulApiController implements InitializingBean  {
         }
     }
 
-    @PostMapping("/echo")
+    @PostMapping("/matlab_notebook/echo")
     @CrossOrigin(origins = "http://localhost:3000")
     public String echoPostRequest(@RequestBody String request) {
         log.info("Received echo POST request: {}", request);
@@ -64,14 +64,14 @@ public class RestfulApiController implements InitializingBean  {
      * @param request EvaRequest object specifying field, gisJoin, and period over which to run EVA.
      * @return The results from ProNEVA, in the form of a EvaResponse object.
      */
-    @PostMapping("/eva")
+    @PostMapping("/matlab_notebook/eva")
     @CrossOrigin(origins = "http://localhost:3000")
     public EvaResponse extremeValueAnalysisRequest(@RequestBody EvaRequest request) {
         log.info("Extreme Value Analysis Request: {}", request);
         return ExtremeValueAnalysis.extremeValueAnalysisRequest(request, engine);
     }
 
-    @PostMapping("/eva/example")
+    @PostMapping("/matlab_notebook/eva/example")
     @CrossOrigin(origins = "http://localhost:3000")
     public EvaResponse extremeValueAnalysisExampleRequest() {
         log.info("Extreme Value Analysis Request for default example (US_Temp.txt)");
