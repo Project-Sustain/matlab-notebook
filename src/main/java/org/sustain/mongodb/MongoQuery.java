@@ -85,7 +85,15 @@ public class MongoQuery {
     }
 
     public List<Double> findBlockExtrema(String field, String gisJoin, Integer timestep, List<Date> periodBoundaries) {
-        log.info("Executing MongoDB query to find block extrema for buckets: {} and field: {}", periodBoundaries, field);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        StringBuilder sb = new StringBuilder("Executing MongoDB query to find block extrema:");
+        sb.append(String.format("\tField: %s,\n",field));
+        sb.append("\tBuckets: [\n");
+        for (Date periodBoundary: periodBoundaries) {
+            sb.append(String.format("\t\t%s\n", format.format(periodBoundary)));
+        }
+        sb.append("\t]");
+        log.info(sb.toString());
 
         FindIterable<Document> testResults = this.collection.find(
                 Filters.eq("GISJOIN", gisJoin)
@@ -98,8 +106,7 @@ public class MongoQuery {
         List<Double> blockExtrema = new ArrayList<>();
 
         try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            Date defaultBucketDate = format.parse("2016-03-07T10:38:17.498Z");
+            Date defaultBucketDate = format.parse("2021-06-30T00:00:00Z");
 
             AggregateIterable<Document> results = this.collection.aggregate(
                     Arrays.asList(
