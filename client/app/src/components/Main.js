@@ -25,6 +25,12 @@ const useStyles = makeStyles({
         backgroundColor: "#77b86e",
         color: "white"
     },
+    errorBanner: {
+        width: "auto",
+        margin: "20px",
+        padding: "20px",
+        backgroundColor: "#fa3c3e"
+    },
     root: {
         width: "auto",
         margin: "20px",
@@ -54,6 +60,7 @@ export default function Main() {
     const [selectedCollection, setSelectedCollection] = useState(null);
     const [currentRequest, setCurrentRequest] = useState(null);
     const [currentResponse, setCurrentResponse] = useState(null);
+    const [hasSuccessfulResponse, setResponseSuccess] = useState(false);
     const [submittedRequest, setSubmittedRequest] = useState(false);
 
     function findGisJoin() {
@@ -115,6 +122,28 @@ export default function Main() {
         }
     }
 
+    /**
+     * Tests the server connection by sending an echo request.
+     */
+    function handleSubmitEchoRequest() {
+        let echoRequestBody = {
+            "testkey": "testvalue"
+        }
+        sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/echo", echoRequestBody)
+            .then(response => {
+                if (response) {
+                    if (response.ok) {
+                        
+                    }
+
+                    console.log(`Response code: ${response.statusCode}`);
+                    console.log(`Response statusText: ${response.statusText}`);
+                    console.log(`Response body: ${response.body}`);
+
+                }
+            });
+    }
+
     function handleSubmit() {
         let gisJoin = findGisJoin();
 
@@ -129,15 +158,28 @@ export default function Main() {
 
             setSubmittedRequest(true);
             setCurrentRequest(requestBody);
+            setResponseSuccess(false);
             setCurrentResponse(null);
 
-            sendServerRequestWithoutBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/eva")
+            sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/eva", requestBody)
                 .then(response => {
-                    console.log(`Received response: code: ${response.statusCode}`);
-                    console.log(`Received response: statusText: ${response.statusText}`);
-                    console.log(`Received response: body:`, response.body);
-                    setCurrentResponse(response.body);
+                    if (response) {
+
+                        console.log(`Response code: ${response.statusCode}`);
+                        console.log(`Response statusText: ${response.statusText}`);
+                        console.log(`Response body: ${response.body}`);
+
+                    }
+
+
+                    // Set the response to the HTTP response, and unset the submitted request flag to clear that banner
+                    setCurrentResponse(response);
                     setSubmittedRequest(false);
+                    if (response.statusCode >= 200 && response.statusCode < 300) {
+                        setResponseSuccess(true);
+                    }
+                }).catch(error => {
+                    console.log(error)
                 });
 
         } else {
@@ -388,6 +430,14 @@ export default function Main() {
         );
     }
 
+    function getTestServerButton() {
+        return (
+            <Grid item xs={10} md={10}>
+                <Button disabled={false} variant="outlined" onClick={handleSubmitEchoRequest}>Test Server</Button>
+            </Grid>
+        );
+    }
+
     function getWorkInProgressBanner() {
         return (
             <Paper elevation={3} className={classes.wipBanner}>
@@ -410,21 +460,31 @@ export default function Main() {
 
     function getFinishedResponseBanner() {
         if (currentResponse) {
-            return (
-                <Paper elevation={3} className={classes.completedBanner}>
-                    Received response. See the plotted results below.
-                </Paper>
-            );
+            if (hasSuccessfulResponse) {
+                return (
+                    <Paper elevation={3} className={classes.completedBanner}>
+                        Successfully received response. See the plotted results below.
+                    </Paper>
+                );
+            } else {
+                return (
+                    <Paper elevation={3} className={classes.errorBanner}>
+                        Encountered an error. Response status code: {currentResponse.statusCode}
+                    </Paper>
+                );
+            }
         } else {
             return null;
         }
     }
 
     function getResults() {
-        if (currentResponse && selectedField && selectedReturnPeriod) {
-            return <Results unit={selectedField["unit"]} returnPeriod={selectedReturnPeriod} response={currentResponse}/>
-        } else {
-            return null;
+        if (currentResponse && hasSuccessfulResponse) {
+            if (selectedField && selectedReturnPeriod) {
+                return <Results unit={selectedField["unit"]} returnPeriod={selectedReturnPeriod} response={currentResponse.body}/>
+            } else {
+                return null;
+            }
         }
     }
 
@@ -447,6 +507,7 @@ export default function Main() {
             {getAwaitingResponseBanner()}
             {getFinishedResponseBanner()}
             {getResults()}
+            {getTestServerButton()}
         </div>
     );
 }

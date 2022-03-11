@@ -36,14 +36,29 @@ export function sendServerRequestWithoutBody(hostname, serverPort, route) {
 
 export async function processRestfulAPI(restfulAPI, requestOptions) {
     let response = await fetch(restfulAPI, requestOptions);
-    let responseBody = await response.json();
-    if(response.status === 400) {
-        return {statusCode: 400, statusText: 'Bad Request', body: null};
+    if (response) {
+        console.log("Response in processRestfulAPI:", response);
+        if (response.ok) {
+            let responseBody = await response.json();
+            console.log("Response ok, responseBody:", responseBody);
+            return {
+                statusCode: response.status,
+                statusText: response.statusText,
+                url: response.url,
+                ok: response.ok,
+                body: response.body
+            }
+        } else {
+            console.log("Response not ok");
+            return {
+                statusCode: response.status,
+                statusText: response.statusText,
+                url: response.url,
+                ok: response.ok,
+                body: null
+            };
+        }
     } else {
-        return {
-            statusCode: response.status,
-            statusText: response.statusText,
-            body: responseBody
-        };
+        console.log("Response is undefined in processRestfulAPI");
     }
 }
