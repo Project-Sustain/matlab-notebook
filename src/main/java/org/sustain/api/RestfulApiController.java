@@ -5,10 +5,15 @@ import com.mathworks.engine.MatlabEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.sustain.matlab.eva.EvaRequest;
 import org.sustain.matlab.eva.EvaResponse;
 import org.sustain.matlab.eva.ExtremeValueAnalysis;
@@ -21,6 +26,7 @@ public class RestfulApiController implements InitializingBean  {
     public static Logger log = LoggerFactory.getLogger(RestfulApiController.class);
 
     private static MatlabEngine engine;
+
 
     @Override
     public void afterPropertiesSet() {
