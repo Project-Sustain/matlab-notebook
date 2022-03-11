@@ -1,15 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Button, TextField, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableContainer,
     FormControl, FormControlLabel, Radio, RadioGroup, FormLabel, TableHead, TableRow, Typography
 } from "@material-ui/core";
 import { Autocomplete } from '@material-ui/lab';
-import {sendServerRequestWithBody, sendServerRequestWithoutBody} from "../api/requests";
+import {v4 as uuidv4} from 'uuid';
+import {sendServerRequestWithBody} from "../api/requests";
 import Results from './Results';
 
 const gisJoinJson = require('../resources/gis_joins.json');
-const supportedCollectionsMetadata = require('../resources/collections_metadata_new.json');
-const exampleResponse = require('../resources/example_response.json');
+const supportedCollectionsMetadata = require('../resources/collections_metadata.json');
 
 const useStyles = makeStyles({
     wipBanner: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles({
         width: "auto",
         margin: "20px",
         padding: "20px",
-        backgroundColor: "#fa3c3e"
+        backgroundColor: "#ff6666"
     },
     root: {
         width: "auto",
@@ -58,10 +58,12 @@ export default function Main() {
     const [selectedTimestep, setSelectedTimestep] = useState(0);
     const [selectedField, setSelectedField] = useState(null);
     const [selectedCollection, setSelectedCollection] = useState(null);
-    const [currentRequest, setCurrentRequest] = useState(null);
     const [currentResponse, setCurrentResponse] = useState(null);
-    const [hasSuccessfulResponse, setResponseSuccess] = useState(false);
     const [submittedRequest, setSubmittedRequest] = useState(false);
+
+    useEffect(() => {
+        testServerConnection();
+    }, [])
 
     function findGisJoin() {
         if (selectedState) {
@@ -125,66 +127,99 @@ export default function Main() {
     /**
      * Tests the server connection by sending an echo request.
      */
-    function handleSubmitEchoRequest() {
+    function testServerConnection() {
         let echoRequestBody = {
-            "testkey": "testvalue"
+            "requestId": uuidv4()
         }
+
+        // Clear out any previous responses
+        setCurrentResponse(null);
+
+        // Mark that there's an ongoing request
+        setSubmittedRequest(true);
+
         sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/echo", echoRequestBody)
             .then(response => {
                 if (response) {
-                    if (response.ok) {
-                        
-                    }
-
                     console.log(`Response code: ${response.statusCode}`);
                     console.log(`Response statusText: ${response.statusText}`);
                     console.log(`Response body: ${response.body}`);
 
+                    if (!response.ok) {
+                        setCurrentResponse({
+                            ok: response.ok,
+                            statusCode: -1,
+                            statusText: "Server is currently offline"
+                        });
+                    } else { // Successful response
+                        console.log("Successfully connected to server at sustain.cs.colostate.edu:31415")
+                        setCurrentResponse({
+                            ok: true,
+                            statusCode: 1,
+                            statusText: "Server is online"
+                        });
+                    }
                 }
-            });
+            }).catch(error => {
+                setCurrentResponse({
+                    ok: false,
+                    statusText: `Undefined response object: ${error}`,
+                    statusCode: 500
+                });
+        });
+
+        // Mark that there's no ongoing request
+        setSubmittedRequest(false);
     }
 
     function handleSubmit() {
         let gisJoin = findGisJoin();
-
-        if (gisJoin !== "") {
-            let requestBody = {
-                "collection": selectedCollection["collection"],
-                "field": selectedField["field"],
-                "gisJoin": gisJoin,
-                "period": selectedReturnPeriod,
-                "timestep": selectedTimestep
-            };
-
-            setSubmittedRequest(true);
-            setCurrentRequest(requestBody);
-            setResponseSuccess(false);
-            setCurrentResponse(null);
-
-            sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/eva", requestBody)
-                .then(response => {
-                    if (response) {
-
-                        console.log(`Response code: ${response.statusCode}`);
-                        console.log(`Response statusText: ${response.statusText}`);
-                        console.log(`Response body: ${response.body}`);
-
-                    }
-
-
-                    // Set the response to the HTTP response, and unset the submitted request flag to clear that banner
-                    setCurrentResponse(response);
-                    setSubmittedRequest(false);
-                    if (response.statusCode >= 200 && response.statusCode < 300) {
-                        setResponseSuccess(true);
-                    }
-                }).catch(error => {
-                    console.log(error)
-                });
-
-        } else {
+        if (gisJoin === "") {
             console.log("Cannot submit request; gisJoin is empty!");
+            return;
         }
+
+        let requestBody = {
+            "collection": selectedCollection["collection"],
+            "field": selectedField["field"],
+            "gisJoin": gisJoin,
+            "period": selectedReturnPeriod,
+            "timestep": selectedTimestep
+        };
+
+        // Clear out any previous responses
+        setCurrentResponse(null);
+
+        // Mark that there's an ongoing request
+        setSubmittedRequest(true);
+
+        sendServerRequestWithBody("sustain.cs.colostate.edu", 31415, "matlab_notebook/eva", requestBody)
+            .then(response => {
+                if (response) {
+                    console.log(`Response code: ${response.statusCode}`);
+                    console.log(`Response statusText: ${response.statusText}`);
+                    console.log(`Response body: ${response.body}`);
+
+                    // Set the response to the HTTP response
+                    setCurrentResponse(response);
+                } else {
+                    setCurrentResponse({
+                        ok: false,
+                        statusText: "Undefined response object",
+                        statusCode: 500
+                    });
+                }
+
+                // Mark that there's no ongoing request
+                setSubmittedRequest(false);
+            }).catch(error => {
+                console.log(error);
+                setCurrentResponse({
+                    ok: false,
+                    statusText: `Undefined response object: ${error}`,
+                    statusCode: 500
+                });
+            });
     }
 
     function handleReset() {
@@ -195,7 +230,6 @@ export default function Main() {
         setSelectedCounty(null);
         setSelectedReturnPeriod(null);
         setSelectedTimestep(0);
-        setCurrentRequest(null);
         setCurrentResponse(null);
     }
 
@@ -206,7 +240,7 @@ export default function Main() {
                         autoHighlight
                         defaultValue={Object.keys(gisJoinJson["states"])[0]}
                         options={Object.keys(gisJoinJson["states"])}
-                        value={selectedState ? selectedState.name : ''}
+                        value={selectedState ? selectedState.name : Object.keys(gisJoinJson["states"])[0]}
                         onChange={(event, value) => {
                             if (value) {
                                 handleSelectStateChange(value);
@@ -224,7 +258,7 @@ export default function Main() {
                     className={classes.autocomplete}
                     autoHighlight
                     options={selectedState ? Object.keys(selectedState["counties"]) : []}
-                    value={selectedCounty ? selectedCounty.name : ''}
+                    value={selectedCounty ? selectedCounty.name : ""}
                     onChange={(event, value) => {
                         if (value) {
                             handleSelectCountyChange(value);
@@ -245,7 +279,7 @@ export default function Main() {
                     autoHighlight
                     options={Object.keys(supportedCollectionsMetadata)}
                     defaultValue={Object.keys(supportedCollectionsMetadata)[0]}
-                    value={selectedCollection ? selectedCollection.name : ''}
+                    value={selectedCollection ? selectedCollection.name : null}
                     onChange={(event, value) => {
                         if (value) {
                             handleSelectCollectionChange(value);
@@ -277,7 +311,7 @@ export default function Main() {
                     autoHighlight
                     options={getFieldOptions()}
                     defaultValue={selectedCollection ? Object.keys(selectedCollection["fieldMetadata"])[8]["name"] : ''}
-                    value={selectedField ? selectedField.name : ''}
+                    value={selectedField ? selectedField.name : null}
                     onChange={(event, value) => {
                         if (value) {
                             handleSelectFieldChange(value);
@@ -430,14 +464,6 @@ export default function Main() {
         );
     }
 
-    function getTestServerButton() {
-        return (
-            <Grid item xs={10} md={10}>
-                <Button disabled={false} variant="outlined" onClick={handleSubmitEchoRequest}>Test Server</Button>
-            </Grid>
-        );
-    }
-
     function getWorkInProgressBanner() {
         return (
             <Paper elevation={3} className={classes.wipBanner}>
@@ -460,18 +486,35 @@ export default function Main() {
 
     function getFinishedResponseBanner() {
         if (currentResponse) {
-            if (hasSuccessfulResponse) {
-                return (
-                    <Paper elevation={3} className={classes.completedBanner}>
-                        Successfully received response. See the plotted results below.
-                    </Paper>
-                );
+            if (currentResponse.ok) {
+                if (currentResponse.statusCode === 1) {
+                    return (
+                        <Paper elevation={3} className={classes.completedBanner}>
+                            Successfully connected to the server
+                        </Paper>
+                    );
+                } else {
+                    return (
+                        <Paper elevation={3} className={classes.completedBanner}>
+                            Successfully received response. See the plotted results below.
+                        </Paper>
+                    );
+                }
             } else {
-                return (
-                    <Paper elevation={3} className={classes.errorBanner}>
-                        Encountered an error. Response status code: {currentResponse.statusCode}
-                    </Paper>
-                );
+                if (currentResponse.statusCode === -1) {
+                    return (
+                        <Paper elevation={3} className={classes.errorBanner}>
+                            Tried connecting; {currentResponse.statusText}
+                        </Paper>
+                    );
+                } else {
+                    return (
+                        <Paper elevation={3} className={classes.errorBanner}>
+                            Failed request! Message: "{currentResponse.statusText}", Status Code: {currentResponse.statusCode}
+                        </Paper>
+                    );
+                }
+
             }
         } else {
             return null;
@@ -479,7 +522,7 @@ export default function Main() {
     }
 
     function getResults() {
-        if (currentResponse && hasSuccessfulResponse) {
+        if (currentResponse && currentResponse.ok && currentResponse.statusCode >= 200 && currentResponse.statusCode < 300) {
             if (selectedField && selectedReturnPeriod) {
                 return <Results unit={selectedField["unit"]} returnPeriod={selectedReturnPeriod} response={currentResponse.body}/>
             } else {
@@ -507,7 +550,6 @@ export default function Main() {
             {getAwaitingResponseBanner()}
             {getFinishedResponseBanner()}
             {getResults()}
-            {getTestServerButton()}
         </div>
     );
 }

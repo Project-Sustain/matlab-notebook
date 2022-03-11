@@ -46,7 +46,7 @@ export async function processRestfulAPI(restfulAPI, requestOptions) {
                 statusText: response.statusText,
                 url: response.url,
                 ok: response.ok,
-                body: response.body
+                body: responseBody
             }
         } else {
             console.log("Response not ok");
